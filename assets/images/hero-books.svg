@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-label="Stack of books on a wooden table with a coffee mug">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232323"/>
+      <stop offset="1" stop-color="#101010"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8c95e"/>
+      <stop offset="1" stop-color="#b8912e"/>
+    </linearGradient>
+    <linearGradient id="goldDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#8f7420"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a5a33"/>
+      <stop offset="1" stop-color="#5e3a1e"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <!-- Glow behind the stack -->
+  <ellipse cx="320" cy="300" rx="260" ry="150" fill="#d4af37" opacity="0.12" filter="url(#soft)"/>
+
+  <!-- Wooden table -->
+  <rect x="40" y="400" width="560" height="90" rx="14" fill="url(#wood)"/>
+  <rect x="40" y="400" width="560" height="10" rx="5" fill="#9c6b3d" opacity="0.8"/>
+  <line x1="120" y1="420" x2="120" y2="480" stroke="#5e3a1e" stroke-width="3" opacity="0.5"/>
+  <line x1="320" y1="420" x2="320" y2="480" stroke="#5e3a1e" stroke-width="3" opacity="0.5"/>
+  <line x1="520" y1="420" x2="520" y2="480" stroke="#5e3a1e" stroke-width="3" opacity="0.5"/>
+
+  <!-- Book 1 (bottom, dark) -->
+  <g>
+    <rect x="180" y="330" width="260" height="70" rx="6" fill="#1d1d1d" stroke="#333" stroke-width="2"/>
+    <rect x="190" y="340" width="240" height="8" rx="4" fill="#d4af37" opacity="0.9"/>
+    <rect x="190" y="352" width="240" height="8" rx="4" fill="#d4af37" opacity="0.9"/>
+    <rect x="190" y="364" width="240" height="8" rx="4" fill="#d4af37" opacity="0.9"/>
+    <rect x="190" y="376" width="240" height="8" rx="4" fill="#d4af37" opacity="0.9"/>
+  </g>
+
+  <!-- Book 2 (gold, narrower) -->
+  <g>
+    <rect x="205" y="252" width="210" height="84" rx="6" fill="url(#gold)"/>
+    <rect x="215" y="264" width="190" height="60" rx="4" fill="#7a641c" opacity="0.55"/>
+    <rect x="215" y="268" width="190" height="52" rx="3" fill="#0d0d0d" opacity="0.85"/>
+    <text x="310" y="304" font-family="Georgia, serif" font-size="26" fill="#d4af37" text-anchor="middle" font-weight="bold">BOOKHAVEN</text>
+  </g>
+
+  <!-- Book 3 (white, top) -->
+  <g>
+    <rect x="235" y="178" width="170" height="80" rx="6" fill="#f5f2ea"/>
+    <rect x="245" y="190" width="150" height="8" rx="4" fill="#d4af37"/>
+    <rect x="245" y="204" width="150" height="8" rx="4" fill="#d4af37" opacity="0.8"/>
+    <rect x="245" y="218" width="150" height="8" rx="4" fill="#d4af37" opacity="0.6"/>
+    <rect x="245" y="232" width="90" height="8" rx="4" fill="#d4af37" opacity="0.4"/>
+    <!-- Small open book on top -->
+    <path d="M320 178 q-35 -16 -70 0 l-6 -18 q35 -18 76 -4 z" fill="#fff" stroke="#d4af37" stroke-width="2"/>
+    <path d="M320 178 q35 -16 70 0 l6 -18 q-35 -18 -76 -4 z" fill="#f0ead6" stroke="#d4af37" stroke-width="2"/>
+    <line x1="320" y1="160" x2="320" y2="178" stroke="#d4af37" stroke-width="2"/>
+  </g>
+
+  <!-- Coffee mug -->
+  <g>
+    <path d="M470 320 q-4 -4 -4 -14 l-6 -66 q0 -10 10 -10 h66 q10 0 10 10 l-6 66 q0 10 -4 14 z" fill="#f5f2ea" stroke="#d4af37" stroke-width="3"/>
+    <path d="M536 312 q22 0 22 20 q0 16 -22 16" fill="none" stroke="#d4af37" stroke-width="7"/>
+    <ellipse cx="508" cy="298" rx="36" ry="8" fill="#5e3a1e"/>
+    <ellipse cx="508" cy="296" rx="28" ry="5.5" fill="#7a4a26"/>
+    <!-- Steam -->
+    <path d="M496 268 q-8 -14 2 -26" fill="none" stroke="#fff" stroke-width="3" opacity="0.5" stroke-linecap="round">
+      <animate attributeName="d" values="M496 268 q-8 -14 2 -26;M496 268 q8 -14 -2 -26;M496 268 q-8 -14 2 -26" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M516 262 q-8 -14 2 -26" fill="none" stroke="#fff" stroke-width="3" opacity="0.4" stroke-linecap="round">
+      <animate attributeName="d" values="M516 262 q8 -14 -2 -26;M516 262 q-8 -14 2 -26;M516 262 q8 -14 -2 -26" dur="3.4s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Floor shadow -->
+  <ellipse cx="320" cy="402" rx="210" ry="16" fill="#000" opacity="0.35"/>
+</svg>

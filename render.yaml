@@ -1,0 +1,50 @@
+# Render.com blueprint — deploys the Node backend (which also serves the
+# static site). SQLite file + uploaded images live on a persistent disk so
+# admin edits and customer orders survive restarts and deploys.
+#
+# To deploy:
+#   1. Push this repository to GitHub/GitLab.
+#   2. In Render: New -> Blueprint -> select the repo.
+#   3. Set the secrets ADMIN_EMAIL / ADMIN_PASSWORD (and SITE_URL once the
+#      site URL is known) in Settings -> Environment.
+#   4. After the first deploy, open $RENDER_URL/account.html and sign in.
+#
+# NOTE: node:sqlite requires Node 22.5+. Render's default is fine once
+#       "engines.node" in package.json is honoured by NODE_VERSION below.
+# NOTE: the server refuses to start in production without ADMIN_EMAIL and
+#       ADMIN_PASSWORD, so the first deploy waits for those secrets.
+
+services:
+  - type: web
+    name: bookhaven
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    disk:
+      name: bookhaven-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22.11.0"
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /var/data/books.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      # Public site URL (e.g. https://bookhaven.onrender.com). Used in the
+      # frontend's error banners instead of a hardcoded localhost address.
+      - key: SITE_URL
+        value: ""
+      # Leave empty when the site and API share this origin (they do here).
+      - key: CORS_ORIGIN
+        value: ""
+      # Secrets — create these in Render (Settings -> Environment). sync:false
+      # means they are never committed to the blueprint: they only live in
+      # the Render dashboard.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#1f3a5f"/><stop offset="1" stop-color="#0f1e33"/>
+</linearGradient>
+<radialGradient id="halo" cx="0.5" cy="0.45" r="0.6">
+<stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="400" height="600" fill="url(#g)"/>
+<rect width="400" height="600" fill="url(#halo)"/>
+<rect x="16" y="16" width="368" height="568" fill="none" stroke="#f4ecd9" stroke-opacity="0.35" stroke-width="2"/>
+<circle cx="200" cy="290" r="150" fill="none" stroke="#f4ecd9" stroke-opacity="0.22" stroke-width="1"/>
+<circle cx="200" cy="290" r="118" fill="none" stroke="#f4ecd9" stroke-opacity="0.16" stroke-width="1"/>
+<rect x="46" y="196" width="308" height="4" fill="#c9a227"/>
+<text x="200" y="252" text-anchor="middle" fill="#f4ecd9" font-family="Georgia, Times New Roman, serif" font-size="40" font-weight="700" letter-spacing="2">The</text>
+<text x="200" y="306" text-anchor="middle" fill="#f4ecd9" font-family="Georgia, Times New Roman, serif" font-size="40" font-weight="700" letter-spacing="2">Alchemist</text>
+<text x="200" y="558" text-anchor="middle" fill="#f4ecd9" font-family="Georgia, Times New Roman, serif" font-size="19" letter-spacing="4" opacity="0.85">PAULO COELHO</text>
+</svg>

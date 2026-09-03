@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3ead7"/><stop offset="1" stop-color="#d9cba9"/></linearGradient></defs>
+<rect width="400" height="600" fill="url(#g)"/>
+<rect x="16" y="16" width="368" height="568" fill="none" stroke="#1e1e22" stroke-opacity="0.25" stroke-width="2"/>
+<text x="200" y="240" text-anchor="middle" font-family="Georgia, serif" font-size="42" font-weight="700" letter-spacing="4" fill="#1e1e22">ATOMIC</text>
+<text x="200" y="296" text-anchor="middle" font-family="Georgia, serif" font-size="42" font-weight="700" letter-spacing="4" fill="#1e1e22">HABITS</text>
+<text x="200" y="332" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" letter-spacing="1" fill="#1e1e22" opacity="0.75">An Easy &amp; Proven Way to Build Good Habits</text>
+<circle cx="136" cy="372" r="26" fill="#f5a623"/><circle cx="200" cy="372" r="26" fill="#10b981"/><circle cx="264" cy="372" r="26" fill="#ef4444"/>
+<circle cx="200" cy="440" r="22" fill="#3b82f6"/>
+<text x="200" y="556" text-anchor="middle" font-family="Georgia, serif" font-size="19" letter-spacing="4" fill="#1e1e22" opacity="0.85">JAMES CLEAR</text>
+</svg>

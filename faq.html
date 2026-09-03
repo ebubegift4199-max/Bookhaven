@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ &amp; Help Center — BookHaven</title>
+  <meta name="description" content="BookHaven help center — answers about orders, shipping and delivery, returns and refunds, order tracking and how to contact us.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .faq-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 8px 0 26px; background: var(--paper-alt); }
+    .faq-nav a {
+      padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--card); color: var(--ink); text-decoration: none;
+      font-size: 13.5px; font-weight: 600; transition: all .25s var(--ease);
+    }
+    .faq-nav a:hover { background: var(--gold); border-color: var(--gold); color: #141006; transform: translateY(-2px); }
+
+    .faq-wrap { max-width: 820px; margin: 0 auto; padding-bottom: 40px; }
+    .faq-group { margin-top: 56px; scroll-margin-top: calc(var(--nav-h) + 14px); }
+    .faq-group > h2 {
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--font-head); font-size: 26px; color: var(--ink); margin-bottom: 20px;
+    }
+    .faq-group > h2 svg { width: 24px; height: 24px; color: var(--gold); flex: none; }
+
+    details.faq-item {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm);
+      margin-bottom: 12px; overflow: hidden; transition: box-shadow .25s var(--ease);
+    }
+    details.faq-item[open] { box-shadow: var(--shadow-sm); }
+    details.faq-item summary {
+      list-style: none; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 14px; padding: 17px 20px; font-weight: 600; font-size: 15.5px; color: var(--ink);
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    details.faq-item summary::after {
+      content: "+"; font-size: 22px; line-height: 1; color: var(--gold);
+      flex: none; transition: transform .25s var(--ease);
+    }
+    details.faq-item[open] summary::after { transform: rotate(45deg); }
+    details.faq-item .faq-body { padding: 0 20px 18px; color: var(--muted); font-size: 14.5px; }
+  </style>
+</head>
+<body data-page="faq">
+
+  <!-- ================= NAVIGATION ================= -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand" aria-label="BookHaven home">        <span class="brand-name">Book<span class="gold">Haven</span></span>
+      </a>
+
+      <nav class="nav-links" id="nav-links" aria-label="Primary">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="categories.html" class="nav-link">Categories</a>
+        <a href="bestsellers.html" class="nav-link">Best Sellers</a>
+        <a href="new-releases.html" class="nav-link">New Releases</a>
+        <a href="deals.html" class="nav-link">Deals</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="nav-search">
+          <input type="text" id="nav-search" class="nav-search-input" placeholder="Search books..." autocomplete="off" aria-label="Search books">
+          <svg class="nav-search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <a href="wishlist.html" class="icon-btn" id="wishlist-icon" aria-label="Wishlist" title="Wishlist">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M12 21s-7.5-4.7-10-9.3C.5 8.2 2.6 4.5 6.2 4.5c2.2 0 3.9 1.2 5.8 3.4 1.9-2.2 3.6-3.4 5.8-3.4 3.6 0 5.7 3.7 4.2 7.2C19.5 16.3 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </a>
+
+        <a href="cart.html" class="icon-btn cart-btn" id="cart-icon" aria-label="Cart" title="Cart">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M4 4h2l2.4 12.4a1.5 1.5 0 0 0 1.5 1.1h7.9a1.5 1.5 0 0 0 1.5-1.2L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="20.5" r="1.4" fill="currentColor"/>
+            <circle cx="17" cy="20.5" r="1.4" fill="currentColor"/>
+          </svg>
+          <span class="cart-badge" id="cart-count">0</span>
+        </a>
+
+        <a href="account.html" class="icon-btn" aria-label="Account" title="Account">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M4.5 20.5c1.5-3.5 4.2-5 7.5-5s6 1.5 7.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Mobile navigation">
+    <div class="drawer-head">
+      <a href="index.html" class="brand">
+        <img src="assets/images/logo.svg" alt="" width="34" height="34">
+        <span class="brand-name">Book<span class="gold">Haven</span></span>
+      </a>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="drawer-links">
+      <a href="index.html" class="drawer-link">Home</a>
+      <a href="categories.html" class="drawer-link">Categories</a>
+      <a href="bestsellers.html" class="drawer-link">Best Sellers</a>
+      <a href="new-releases.html" class="drawer-link">New Releases</a>
+      <a href="deals.html" class="drawer-link">Deals</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE HERO ================= -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Need Help?</span>
+      <h1 class="page-hero-title">Frequently Asked <span class="gold">Questions</span></h1>
+      <p class="page-hero-desc">Everything you need to know about ordering, shipping, returns and getting in touch with the BookHaven team.</p>
+    </div>
+  </section>
+
+  <nav class="faq-nav container" aria-label="FAQ topics">
+    <a href="#help-center">Help Center</a>
+    <a href="#shipping-delivery">Shipping &amp; Delivery</a>
+    <a href="#returns-refunds">Returns &amp; Refunds</a>
+    <a href="#track-order">Track Your Order</a>
+    <a href="#contact-us">Contact Us</a>
+  </nav>
+
+  <!-- ================= FAQ CONTENT ================= -->
+  <main class="container">
+    <div class="faq-wrap">
+
+      <section class="faq-group" id="help-center">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.5 2.5 0 1 1 3.4 2.33c-.7.28-.9.77-.9 1.37v.5"/><circle cx="12" cy="16.8" r=".4" fill="currentColor"/></svg>Help Center</h2>
+
+        <details class="faq-item" open>
+          <summary>How do I create a BookHaven account?</summary>
+          <div class="faq-body">Click the account icon at the top of any page and choose “Sign up”. You only need an email address and a password. An account lets you check out faster, track orders and keep a wishlist.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>I forgot my password. How do I reset it?</summary>
+          <div class="faq-body">On the sign-in screen, use the “Forgot password” option and follow the instructions sent to your email. If you no longer have access to that email, contact us and we will help you recover your account.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What payment methods do you accept?</summary>
+          <div class="faq-body">We accept major debit and credit cards, bank transfer and cash on delivery within supported areas. All online payments are processed over an encrypted connection.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I change or cancel my order after placing it?</summary>
+          <div class="faq-body">Orders can be changed or cancelled while they are still being processed. Contact us as soon as possible with your order number and we will do our best — once a parcel has shipped, changes are no longer possible.</div>
+        </details>
+      </section>
+
+      <section class="faq-group" id="shipping-delivery">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 7h12v10h-12z"/><path d="M13.5 10h4l3 3v4h-7"/><circle cx="6" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/></svg>Shipping &amp; Delivery</h2>
+
+        <details class="faq-item" open>
+          <summary>How long does delivery take?</summary>
+          <div class="faq-body">Standard delivery takes 2–5 business days depending on your location. Major cities usually receive orders within 2–3 days; remote areas may take up to 7 business days.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What does shipping cost?</summary>
+          <div class="faq-body">Shipping is calculated at checkout based on your address and order size. Orders above the free-shipping threshold shown on the cart page qualify for free standard delivery.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you deliver outside major cities?</summary>
+          <div class="faq-body">Yes — we deliver nationwide through our courier partners. Exact availability and delivery estimates for your area are shown at checkout before you pay.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How is my order packaged?</summary>
+          <div class="faq-body">Every book is wrapped in protective padding and shipped in a sturdy mailer so it reaches you in the same condition it left our shelves.</div>
+        </details>
+      </section>
+
+      <section class="faq-group" id="returns-refunds">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>Returns &amp; Refunds</h2>
+
+        <details class="faq-item" open>
+          <summary>What is your return policy?</summary>
+          <div class="faq-body">You can return most items within 14 days of delivery. Books must be unused and in resellable condition. Simply contact us with your order number to start a return.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>My book arrived damaged. What should I do?</summary>
+          <div class="faq-body">We are sorry about that! Send us a photo of the damage within 48 hours of delivery and we will send a replacement or issue a full refund — including any shipping fees.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>When will I get my refund?</summary>
+          <div class="faq-body">Refunds are processed within 3–5 business days after the returned item reaches us. Your bank may take a few extra days to post the money to your statement.</div>
+        </details>
+      </section>
+
+      <section class="faq-group" id="track-order">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg>Track Your Order</h2>
+
+        <details class="faq-item" open>
+          <summary>How can I track my order?</summary>
+          <div class="faq-body">Once your parcel ships we email you a tracking number and link. You can also sign in, open your account page and view the status of every order you have placed.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>My tracking has not updated in a while. Is something wrong?</summary>
+          <div class="faq-body">Tracking can lag during weekends, holidays or long-distance legs of the route. If there is no movement for more than 3 business days, reach out with your order number and we will investigate with the courier.</div>
+        </details>
+      </section>
+
+      <section class="faq-group" id="contact-us">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 6.5 9 6.5 9-6.5"/></svg>Contact Us</h2>
+
+        <details class="faq-item" open>
+          <summary>How do I reach customer support?</summary>
+          <div class="faq-body">Email us at support@bookhaven.example and include your order number where relevant. We reply within one business day, Monday to Saturday.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What are your support hours?</summary>
+          <div class="faq-body">Our team is available Monday–Friday, 9am–6pm, and Saturdays 10am–4pm. Messages received outside these hours are answered the next working day.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you have a physical store?</summary>
+          <div class="faq-body">BookHaven is primarily an online bookstore, which keeps our prices low. Selected titles appear at partner bookshops — write to us and we will point you to the nearest one.</div>
+        </details>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <a href="/admin" class="brand">
+            <img src="assets/images/logo.svg" alt="" width="38" height="38">
+            <span class="brand-name">Book<span class="gold">Haven</span></span>
+          </a>
+          <p>Your premium destination for discovering great books. Curated reads across every genre, delivered with care.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="categories.html">Categories</a>
+          <a href="bestsellers.html">Best Sellers</a>
+          <a href="new-releases.html">New Releases</a>
+          <a href="deals.html">Deals</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Support</h4>
+          <a href="faq.html#help-center">Help Center / FAQ</a>
+          <a href="faq.html#shipping-delivery">Shipping &amp; Delivery</a>
+          <a href="faq.html#returns-refunds">Returns &amp; Refunds</a>
+          <a href="faq.html#track-order">Track Your Order</a>
+          <a href="faq.html#contact-us">Contact Us</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about-us.html">About Us</a>
+          <a href="our-story.html">Our Story</a>
+          <a href="careers.html">Careers</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Newsletter</h4>
+          <p>Subscribe for monthly picks and member-only discounts.</p>
+          <form class="footer-newsletter" id="footer-newsletter-form" novalidate>
+            <input type="email" id="footer-email" placeholder="Your email" aria-label="Email address">
+            <button type="submit" class="btn btn-gold btn-sm">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 BookHaven. All rights reserved.</span>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V5c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7V11H8.3v3h2.4v7h2.8z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Twitter / X"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 4l7.2 9.3L4.4 20h2.2l5.7-5.4L16.8 20H20l-7.5-9.7L18.9 4h-2.2l-5.2 4.9L8.2 4H4z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="16.8" cy="7.2" r="1.2" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.6 8.2a2.6 2.6 0 0 0-1.8-1.9C18.2 6 12 6 12 6s-6.2 0-7.8.3A2.6 2.6 0 0 0 2.4 8.2 27 27 0 0 0 2.1 12a27 27 0 0 0 .3 3.8 2.6 2.6 0 0 0 1.8 1.9c1.6.3 7.8.3 7.8.3s6.2 0 7.8-.3a2.6 2.6 0 0 0 1.8-1.9A27 27 0 0 0 21.9 12a27 27 0 0 0-.3-3.8zM10 15.2V8.8l5.4 3.2L10 15.2z" fill="currentColor"/></svg></a>
+        </div>
+        <span>Crafted with <span class="gold">&hearts;</span> for readers</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= BACK TO TOP ================= -->
+  <button class="to-top" id="to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <script src="config.js"></script>
+  <script src="js/api-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

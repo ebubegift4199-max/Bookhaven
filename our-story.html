@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story — BookHaven</title>
+  <meta name="description" content="The story behind BookHaven — from one shelf of hand-picked titles to thousands of books delivered to readers nationwide.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .prose { max-width: 760px; margin: 0 auto; }
+    .prose p { color: var(--muted); font-size: 15.5px; margin-bottom: 16px; }
+    .story-block { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .story-stat { background: linear-gradient(160deg, #151519, #0b0b0d); color: #fff; border-radius: var(--radius); padding: 38px 32px; }
+    .story-stat strong { font-family: var(--font-head); font-size: 42px; color: var(--gold-light); display: block; line-height: 1; }
+    .story-stat span { color: #c6c2b6; font-size: 14px; }
+    .stat-row { display: flex; flex-direction: column; gap: 26px; margin-top: 28px; }
+    .timeline { max-width: 760px; margin: 0 auto; }
+    .timeline-item { border-left: 2px solid var(--line); padding: 0 0 26px 26px; position: relative; }
+    .timeline-item::before { content: ""; position: absolute; left: -7px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); }
+    .timeline-item h3 { font-family: var(--font-head); font-size: 19px; margin: 0 0 6px; }
+    .timeline-item p { color: var(--muted); font-size: 14.5px; margin: 0; }
+    @media (max-width: 860px) { .story-block { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-page="about">
+
+  <!-- ================= NAVIGATION ================= -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand" aria-label="BookHaven home">        <span class="brand-name">Book<span class="gold">Haven</span></span>
+      </a>
+
+      <nav class="nav-links" id="nav-links" aria-label="Primary">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="categories.html" class="nav-link">Categories</a>
+        <a href="bestsellers.html" class="nav-link">Best Sellers</a>
+        <a href="new-releases.html" class="nav-link">New Releases</a>
+        <a href="deals.html" class="nav-link">Deals</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="nav-search">
+          <input type="text" id="nav-search" class="nav-search-input" placeholder="Search books..." autocomplete="off" aria-label="Search books">
+          <svg class="nav-search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <a href="wishlist.html" class="icon-btn" id="wishlist-icon" aria-label="Wishlist" title="Wishlist">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M12 21s-7.5-4.7-10-9.3C.5 8.2 2.6 4.5 6.2 4.5c2.2 0 3.9 1.2 5.8 3.4 1.9-2.2 3.6-3.4 5.8-3.4 3.6 0 5.7 3.7 4.2 7.2C19.5 16.3 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </a>
+
+        <a href="cart.html" class="icon-btn cart-btn" id="cart-icon" aria-label="Cart" title="Cart">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M4 4h2l2.4 12.4a1.5 1.5 0 0 0 1.5 1.1h7.9a1.5 1.5 0 0 0 1.5-1.2L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="20.5" r="1.4" fill="currentColor"/>
+            <circle cx="17" cy="20.5" r="1.4" fill="currentColor"/>
+          </svg>
+          <span class="cart-badge" id="cart-count">0</span>
+        </a>
+
+        <a href="account.html" class="icon-btn" aria-label="Account" title="Account">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M4.5 20.5c1.5-3.5 4.2-5 7.5-5s6 1.5 7.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Mobile navigation">
+    <div class="drawer-head">
+      <a href="index.html" class="brand">
+        <img src="assets/images/logo.svg" alt="" width="34" height="34">
+        <span class="brand-name">Book<span class="gold">Haven</span></span>
+      </a>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="drawer-links">
+      <a href="index.html" class="drawer-link">Home</a>
+      <a href="categories.html" class="drawer-link">Categories</a>
+      <a href="bestsellers.html" class="drawer-link">Best Sellers</a>
+      <a href="new-releases.html" class="drawer-link">New Releases</a>
+      <a href="deals.html" class="drawer-link">Deals</a>
+      <a href="#newsletter" class="drawer-link">Newsletter</a>
+    </nav>
+  </aside>
+
+  <!-- ================= PAGE HERO ================= -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Our Story</span>
+      <h1 class="page-hero-title">From One Shelf to <span class="gold">Thousands</span></h1>
+      <p class="page-hero-desc">How a recommendation list between friends became an online bookstore shipping to readers nationwide.</p>
+    </div>
+  </section>
+
+  <!-- ================= STORY ================= -->
+  <section class="section">
+    <div class="container">
+      <div class="story-block">
+        <div class="prose" style="max-width:none;">
+          <p>BookHaven started in 2021 as a weekend project between three friends who kept recommending books to each other. That recommendation list became a curated webshop; the webshop became a warehouse; the warehouse now ships to readers nationwide.</p>
+          <p>A lot has changed — but the heart hasn't. We still read before we recommend, we still hunt for the best price on every title, and we still pack every order as if it were a gift for a friend.</p>
+        </div>
+        <div class="stat-row">
+          <div class="story-stat"><strong>50k+</strong><span>books delivered to happy readers</span></div>
+          <div class="story-stat"><strong>6</strong><span>curated categories, from Fiction to Children's</span></div>
+          <div class="story-stat"><strong>4.8★</strong><span>average rating from our customers</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TIMELINE ================= -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Milestones</span>
+          <h2 class="section-title">The Journey So <span class="gold">Far</span></h2>
+        </div>
+      </div>
+      <div class="timeline" style="margin-top: 28px;">
+        <div class="timeline-item">
+          <h3>2021 — The First Shelf</h3>
+          <p>Three friends turn a shared recommendation list into a tiny curated webshop of hand-picked titles.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2022 — A Real Shop</h3>
+          <p>We add proper stock, a simple checkout and expand from fiction into every genre readers asked for.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2023 — Nationwide Delivery</h3>
+          <p>Protective packaging and reliable couriers now ship every order anywhere in the country.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>Today — 50,000+ Books Delivered</h3>
+          <p>Still reading before we recommend, still hunting for the best price, still packing every order like a gift.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <a href="/admin" class="brand">
+            <img src="assets/images/logo.svg" alt="" width="38" height="38">
+            <span class="brand-name">Book<span class="gold">Haven</span></span>
+          </a>
+          <p>Your premium destination for discovering great books. Curated reads across every genre, delivered with care.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="categories.html">Categories</a>
+          <a href="bestsellers.html">Best Sellers</a>
+          <a href="new-releases.html">New Releases</a>
+          <a href="deals.html">Deals</a>
+          <a href="faq.html#help-center">Help Center / FAQ</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Support</h4>
+          <a href="faq.html#help-center">Help Center / FAQ</a>
+          <a href="faq.html#shipping-delivery">Shipping &amp; Delivery</a>
+          <a href="faq.html#returns-refunds">Returns &amp; Refunds</a>
+          <a href="faq.html#track-order">Track Your Order</a>
+          <a href="faq.html#contact-us">Contact Us</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about-us.html">About Us</a>
+          <a href="our-story.html">Our Story</a>
+          <a href="careers.html">Careers</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Newsletter</h4>
+          <p>Subscribe for monthly picks and member-only discounts.</p>
+          <form class="footer-newsletter" id="footer-newsletter-form" novalidate>
+            <input type="email" id="footer-email" placeholder="Your email" aria-label="Email address">
+            <button type="submit" class="btn btn-gold btn-sm">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 BookHaven. All rights reserved.</span>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V5c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7V11H8.3v3h2.4v7h2.8z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Twitter / X"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 4l7.2 9.3L4.4 20h2.2l5.7-5.4L16.8 20H20l-7.5-9.7L18.9 4h-2.2l-5.2 4.9L8.2 4H4z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="16.8" cy="7.2" r="1.2" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.6 8.2a2.6 2.6 0 0 0-1.8-1.9C18.2 6 12 6 12 6s-6.2 0-7.8.3A2.6 2.6 0 0 0 2.4 8.2 27 27 0 0 0 2.1 12a27 27 0 0 0 .3 3.8 2.6 2.6 0 0 0 1.8 1.9c1.6.3 7.8.3 7.8.3s6.2 0 7.8-.3a2.6 2.6 0 0 0 1.8-1.9A27 27 0 0 0 21.9 12a27 27 0 0 0-.3-3.8zM10 15.2V8.8l5.4 3.2L10 15.2z" fill="currentColor"/></svg></a>
+        </div>
+        <span>Crafted with <span class="gold">&hearts;</span> for readers</span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="to-top" id="to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <script src="config.js"></script>
+  <script src="js/api-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

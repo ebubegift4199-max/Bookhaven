@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — BookHaven</title>
+  <meta name="description" content="BookHaven admin panel — manage books, orders and store data.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ================= ACCESS GATE ================= -->
+  <!-- Hidden behind the footer logo. Shows the admin sign-in screen;
+       the panel is revealed only after a successful admin login. -->
+  <div class="admin-login visible" id="admin-login">
+    <div class="login-card">
+      <img src="assets/images/logo.svg" alt="BookHaven" width="44" height="44">
+      <h2 class="login-title">BookHaven<small>Admin Sign In</small></h2>
+      <p class="login-sub">Sign in with your admin account to manage the store.</p>
+      <form id="admin-login-form" novalidate>
+        <div class="login-fields">
+          <input type="email" id="admin-login-email" class="login-input" placeholder="Email address" aria-label="Email address" autocomplete="email">
+          <div class="password-wrap">
+            <input type="password" id="admin-login-password" class="login-input" placeholder="Password" aria-label="Password" autocomplete="current-password">
+            <button type="button" class="password-toggle" data-toggle-pw aria-label="Show password">
+              <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.6 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.4 3.2M6.6 6.6A17.3 17.3 0 0 0 2 12s3.5 7 10 7a10.6 10.6 0 0 0 4-.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a2.8 2.8 0 0 0 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="auth-msg" id="admin-login-msg" role="status"></p>
+        <button type="submit" class="btn btn-gold login-btn">Sign In</button>
+      </form>
+      <a href="index.html" class="login-back">&#8592; Back to store</a>
+    </div>
+  </div>
+
+  <div class="admin-layout" id="admin-layout" hidden>
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="admin-sidebar">
+      <a href="index.html" class="admin-brand">
+        <img src="assets/images/logo.svg" alt="" width="34" height="34">
+        <span class="admin-brand-name">Book<span class="gold">Haven</span> <small>Admin</small></span>
+      </a>
+
+      <nav class="admin-nav" aria-label="Admin">
+        <button class="admin-nav-item active" data-tab="dashboard" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="10" width="8" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="admin-nav-item" data-tab="books">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10.4 4.9 7.9 4.3 5.2 4.9v13.6c2.7-.6 5.2 0 6.8 1.6 1.6-1.6 4.1-2.2 6.8-1.6V4.9c-2.7-.6-5.2 0-6.8 1.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6.5v13.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>Books</span>
+        </button>
+        <button class="admin-nav-item" data-tab="orders">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h2l2.2 11.2a1.5 1.5 0 0 0 1.5 1.3h7.6a1.5 1.5 0 0 0 1.5-1.2L20 8H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="20" r="1.3" fill="currentColor"/><circle cx="17" cy="20" r="1.3" fill="currentColor"/></svg>
+          <span>Orders</span>
+        </button>
+      </nav>
+
+      <div class="admin-side-foot">
+        <a href="index.html" class="admin-foot-link">&#8592; View Store</a>
+        <button type="button" class="admin-foot-link admin-logout" id="admin-logout">Logout</button>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+    <main class="admin-main">
+
+      <header class="admin-topbar">
+        <h1 class="admin-title" id="admin-title">Dashboard</h1>
+        <button class="btn btn-gold" id="add-book-btn">+ Add Book</button>
+      </header>
+
+      <!-- Dashboard -->
+      <section class="admin-panel active" id="panel-dashboard">
+        <div class="stat-grid" id="stat-grid">
+          <!-- Rendered by js/admin.js -->
+        </div>
+        <div class="admin-cards">
+          <div class="admin-card">
+            <h3>Books per category</h3>
+            <div id="category-bars">
+              <!-- Rendered by js/admin.js -->
+            </div>
+          </div>
+          <div class="admin-card">
+            <h3>Recent books</h3>
+            <ul class="recent-list" id="recent-books">
+              <!-- Rendered by js/admin.js -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Books -->
+      <section class="admin-panel" id="panel-books">
+        <div class="toolbar">
+          <input type="text" id="book-search" class="toolbar-search" placeholder="Search books..." aria-label="Search books">
+          <span class="toolbar-count" id="book-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Stock</th>
+                <th>Flags</th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="books-tbody">
+              <!-- Rendered by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Orders -->
+      <section class="admin-panel" id="panel-orders">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <!-- Rendered by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= BOOK MODAL ================= -->
+  <div class="modal-overlay" id="book-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h3 id="modal-title">Add Book</h3>
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="book-form" novalidate>
+        <input type="hidden" id="f-id">
+        <div class="form-row">
+          <div class="form-field form-field-wide">
+            <label for="f-title">Title *</label>
+            <input type="text" id="f-title" required>
+          </div>
+          <div class="form-field">
+            <label for="f-author">Author *</label>
+            <input type="text" id="f-author" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-category">Category *</label>
+            <select id="f-category">
+              <option value="Fiction">Fiction</option>
+              <option value="Science">Science</option>
+              <option value="Business">Business</option>
+              <option value="Technology">Technology</option>
+              <option value="Romance">Romance</option>
+              <option value="Children's">Children's</option>
+              <option value="History">History</option>
+              <option value="Young Adult">Young Adult</option>
+              <option value="Self-Help">Self-Help</option>
+              <option value="Biography">Biography</option>
+              <option value="Cook Books & Wine">Cook Books &amp; Wine</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="f-subcategory">Genre (under this category)</label>
+            <select id="f-subcategory">
+              <option value="">— none —</option>
+            </select>
+            <span class="field-hint">Genres belong to a category, e.g. "Fantasy" under Fiction.</span>
+            <button type="button" class="genre-add-btn" id="new-genre-btn">+ Add a new genre</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field form-field-wide" id="new-genre-field" hidden>
+            <label for="f-new-genre">New genre name</label>
+            <input type="text" id="f-new-genre" placeholder="e.g. Fantasy" autocomplete="off">
+            <span class="field-hint">This genre is saved with the book and shows up under its category.</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field form-field-wide">
+            <label for="f-cover">Cover path / URL</label>
+            <input type="text" id="f-cover" placeholder="assets/covers/example.jpg or https://...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field form-field-wide">
+            <label for="cover-file">Upload cover image (stored on the server)</label>
+            <input type="file" id="cover-file" accept="image/png,image/jpeg,image/gif,image/webp">
+            <div class="cover-preview" id="cover-preview-box" hidden>
+              <img id="cover-preview" alt="Cover preview">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-price">Price (₦) *</label>
+            <input type="text" id="f-price" inputmode="decimal" required placeholder="e.g. 14,990.00">
+            <span class="field-hint">Thousands separators are added automatically.</span>
+          </div>
+          <div class="form-field">
+            <label for="f-old">Old price (₦)</label>
+            <input type="text" id="f-old" inputmode="decimal" placeholder="e.g. 19,990.00 — leave empty for none">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-stock">Stock / availability</label>
+            <input type="number" id="f-stock" min="0" placeholder="0 = out of stock">
+          </div>
+          <div class="form-field">
+            <label for="f-rating">Rating (0–5)</label>
+            <input type="number" id="f-rating" step="0.1" min="0" max="5">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-reviews">Reviews</label>
+            <input type="number" id="f-reviews" min="0">
+          </div>
+          <div class="form-field">
+            <label for="f-description">Description</label>
+            <textarea id="f-description" rows="3" placeholder="Short description shown to customers"></textarea>
+          </div>
+        </div>
+        <div class="form-row form-flags">
+          <label class="flag-chip"><input type="checkbox" id="f-featured"> Featured</label>
+          <label class="flag-chip"><input type="checkbox" id="f-bestseller"> Best Seller</label>
+          <label class="flag-chip"><input type="checkbox" id="f-new"> New</label>
+        </div>
+        <p class="form-msg" id="form-msg" role="status"></p>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-gold">Save Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="admin-toast" role="status" aria-live="polite">
+    <span class="toast-msg"></span>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="js/api-config.js"></script>
+  <script src="js/admin-auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

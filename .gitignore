@@ -1,0 +1,5 @@
+node_modules/
+books.db
+*.log
+.env
+uploads/
