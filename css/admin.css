@@ -287,6 +287,22 @@ body.locked { overflow: hidden; }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold-dark); }
 .btn-sm { padding: 7px 14px; font-size: 12.5px; }
 
+/* "Show more" pagination for the large books table */
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 22px 0 6px;
+}
+.load-more-btn {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  color: var(--ink);
+}
+.load-more-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  color: var(--gold-dark);
+}
+
 /* ---------- Panels / tabs ---------- */
 .admin-panel { display: none; animation: fadeUp 0.4s var(--ease); }
 .admin-panel.active { display: block; }

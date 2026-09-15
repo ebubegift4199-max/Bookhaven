@@ -918,6 +918,28 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 14px); }
   border-radius: var(--radius);
 }
 
+/* Load-more button for paged grids (large catalogs) */
+.load-more-wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 8px;
+}
+
+.load-more {
+  border-color: var(--line);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  min-width: 210px;
+}
+.load-more:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  box-shadow: var(--shadow-gold);
+}
+
 /* ---------- 08. Categories page ---------- */
 .category-grid {
   display: grid;
@@ -1406,40 +1428,82 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 14px); }
 }
 
 /* ---------- 13. Responsive ---------- */
+/* Large tablets / small laptops */
+@media (max-width: 1200px) {
+  .book-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 22px; }
+  .footer-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
+  .navbar { --nav-h: 80px; }
+}
+
 @media (max-width: 1024px) {
-  .nav-search { width: 200px; }
-  .nav-inner { gap: 18px; }
-  .footer-grid { grid-template-columns: 1.7fr 1fr 1fr; }
+  .nav-search { width: 190px; }
+  .nav-inner { gap: 16px; }
+  .footer-grid { grid-template-columns: 1.5fr 1fr 1fr; }
+  .hero-inner { gap: 48px; }
+  .carousel .book-card { flex: 0 0 230px; max-width: 230px; }
+  .section { padding: 90px 0; }
+  .newsletter { padding: 90px 0; }
 }
 
 @media (max-width: 900px) {
-  .section { padding: 88px 0; }
-  .hero-inner { grid-template-columns: 1fr; gap: 70px; text-align: center; }
+  .section { padding: 80px 0; }
+  .hero-inner { grid-template-columns: 1fr; gap: 56px; text-align: center; }
   .hero-desc { margin-inline: auto; }
   .hero-stats { justify-content: center; }
   .hero-art { order: 2; }
+  .hero-art img { width: min(380px, 85%); }
   .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-search { width: 170px; }
+  .book-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .btn-lg { padding: 15px 34px; }
 }
 
+/* Small tablets / large phones */
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
   .nav-actions .nav-search { display: none; }
-  .nav-actions { gap: 9px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .nav-actions { gap: 8px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .navbar { --nav-h: 72px; }
+  .brand-name { font-size: 20px; }
+  .icon-btn { width: 40px; height: 40px; }
+  .hamburger { width: 40px; height: 40px; }
+  .hero { padding: calc(var(--nav-h) + 56px) 0 70px; }
+  .page-hero { padding: calc(var(--nav-h) + 56px) 0 56px; }
+  .hero-title { font-size: clamp(2.2rem, 6.5vw, 3rem); }
+  .hero-desc { font-size: 16px; }
+  .stat strong { font-size: 26px; }
+  .section-head { margin-bottom: 32px; }
+  .category-card { padding: 22px; }
+  .category-icon { width: 50px; height: 50px; }
+  .category-icon svg { width: 23px; height: 23px; }
+  .acc-pills { padding: 16px 20px 20px; }
+  .acc-head { padding: 20px; }
+  .book-info { padding: 16px; }
+  .book-title { font-size: 15px; }
+  .price { font-size: 18px; }
+  .footer { padding-top: 60px; }
+  .footer-bottom { flex-direction: column; align-items: center; text-align: center; }
 }
 
-@media (max-width: 560px) {
-  .container { width: min(100% - 32px, 1200px); }
-  .book-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .category-grid { grid-template-columns: 1fr; }
-  .book-info { padding: 14px 13px 16px; }
-  .book-title { font-size: 14.5px; }
-  .price { font-size: 17px; }
-  .carousel-btn { width: 38px; height: 38px; }
-  .carousel-btn svg { width: 16px; height: 16px; }
-  .hero { padding-top: calc(var(--nav-h) + 50px); }
-  .hero-stats { gap: 26px; }
+/* Phones */
+@media (max-width: 640px) {
+  .container { width: min(100% - 24px, 1200px); }
+  .book-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .book-title { font-size: 14px; }
+  .book-author { font-size: 12.5px; }
+  .book-price .price { font-size: 16px; }
+  .price-old { font-size: 12px; }
+  .section { padding: 70px 0; }
+  .newsletter { padding: 70px 0; }
+  .footer-grid { gap: 28px; }
+  .carousel .book-card { flex: 0 0 190px; max-width: 190px; }
+  .carousel-btn { width: 36px; height: 36px; }
+  .carousel-btn svg { width: 15px; height: 15px; }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { width: 100%; }
+  .hero-stats { gap: 24px; margin-top: 40px; }
   .newsletter-form { flex-direction: column; border: 0; background: none; padding: 0; }
   .newsletter-form input {
     background: rgba(255, 255, 255, 0.06);
@@ -1447,8 +1511,69 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 14px); }
     border-radius: 999px;
     padding: 14px 20px;
   }
-  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
-  .toast { white-space: normal; max-width: calc(100vw - 48px); text-align: center; }
+  .newsletter-form .btn { width: 100%; }
+  .view-all { font-size: 14px; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .container { width: min(100% - 20px, 1200px); }
+  .book-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .category-grid { grid-template-columns: 1fr; }
+  .book-info { padding: 12px 10px 14px; }
+  .book-title { font-size: 13px; line-height: 1.25; }
+  .book-author { font-size: 11.5px; }
+  .book-rating .rating { font-size: 12px; }
+  .book-rating .rating-count { font-size: 11px; }
+  .book-price .price { font-size: 15px; }
+  .action-btn { width: 34px; height: 34px; }
+  .action-btn svg { width: 16px; height: 16px; }
+  .section-head { margin-bottom: 24px; }
+  .section-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .category-card { padding: 16px; gap: 12px; }
+  .category-icon { width: 42px; height: 42px; }
+  .category-icon svg { width: 19px; height: 19px; }
+  .category-card h3 { font-size: 15px; }
+  .category-card p { font-size: 12px; }
+  .pill { padding: 7px 13px; font-size: 12px; }
+  .cat-group-title { font-size: 20px; }
+  .carousel .book-card { flex: 0 0 155px; max-width: 155px; }
+  .carousel { gap: 16px; }
+  .hero { padding-top: calc(var(--nav-h) + 40px); }
+  .hero-stats { gap: 18px; }
+  .stat strong { font-size: 22px; }
+  .stat span { font-size: 11px; }
+  .eyebrow { font-size: 11px; letter-spacing: 2px; }
+  .newsletter-title { font-size: 1.5rem; }
+  .toast { white-space: normal; max-width: calc(100vw - 32px); text-align: center; font-size: 13px; }
+  .to-top { right: 14px; bottom: 14px; width: 44px; height: 44px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .footer-col h4 { margin-bottom: 14px; }
+  .drawer { padding: 18px; }
+}
+
+/* Very small phones (320px) */
+@media (max-width: 360px) {
+  .brand-name { font-size: 18px; }
+  .brand img { width: 32px; height: 32px; }
+  .book-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .book-info { padding: 10px 8px 12px; }
+  .book-title { font-size: 12px; }
+  .book-author { font-size: 11px; }
+  .book-actions { gap: 5px; }
+  .action-btn { width: 30px; height: 30px; }
+  .action-btn svg { width: 14px; height: 14px; }
+  .carousel .book-card { flex: 0 0 140px; max-width: 140px; }
+  .carousel { gap: 12px; }
+  .hero-stats { gap: 14px; }
+  .hero-title { font-size: 1.8rem; }
+  .page-hero-title { font-size: 2rem; }
+  .icon-btn { width: 36px; height: 36px; }
+  .icon-btn svg { width: 19px; height: 19px; }
+  .hamburger { width: 36px; height: 36px; }
+  .navbar { --nav-h: 64px; }
+  .newsletter-desc { font-size: 14px; }
+  .footer-bottom { font-size: 12px; }
 }
 
 /* Respect users who prefer reduced motion */
@@ -2034,4 +2159,84 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 14px); }
   .book-modal { grid-template-columns: 1fr; }
   .book-modal-cover { min-height: 260px; }
   .book-modal-body { padding: 28px 22px; }
+}
+
+/* ---------- 15. Fine-grained responsive refinements ---------- */
+@media (max-width: 640px) {
+  .book-modal-overlay { padding: 12px; }
+  .book-modal { max-height: 92vh; }
+  .book-modal-cover { min-height: 0; aspect-ratio: 16 / 9; }
+  .book-modal-cover img { object-fit: cover; }
+  .book-modal-body { padding: 24px 18px; }
+  .book-modal-body h2 { font-size: 22px; }
+  .book-modal-desc { font-size: 14px; }
+  .book-modal-actions { flex-direction: column; }
+  .book-modal-actions .btn, .book-modal-actions .book-modal-wish { width: 100%; }
+  .auth-card { padding: 26px 20px; }
+  .auth-card h3 { font-size: 21px; }
+  .cart-summary { padding: 22px 18px; }
+  .checkout-form .co-section { padding: 22px 18px; }
+  .co-item { grid-template-columns: 44px 1fr auto; gap: 10px; }
+  .co-item img { width: 44px; height: 62px; }
+  .cat-prompt { padding: 48px 18px; }
+  .cat-prompt h3 { font-size: 19px; }
+}
+
+@media (max-width: 480px) {
+  .cart-item {
+    grid-template-columns: 58px 1fr auto;
+    grid-template-areas:
+      "cover info   remove"
+      "cover qty    total";
+    gap: 10px;
+    padding: 14px;
+    row-gap: 12px;
+  }
+  .cart-item-cover { width: 58px; grid-area: cover; }
+  .cart-item-info h3 { font-size: 14px; }
+  .cart-item-info p { font-size: 12.5px; }
+  .qty-stepper { gap: 8px; padding: 5px 10px; }
+  .qty-btn { width: 24px; height: 24px; font-size: 15px; }
+  .cart-line-total { font-size: 14px; }
+  .empty-state { padding: 48px 14px; }
+  .empty-state h3 { font-size: 22px; }
+  .co-row { grid-template-columns: 1fr; gap: 10px; }
+  .auth-card { padding: 22px 16px; }
+  .social-login { gap: 10px; }
+  .social-login-btn { width: 42px; height: 42px; }
+  .section { padding: 56px 0; }
+  .newsletter { padding: 56px 0; }
+  .filter-bar { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 360px) {
+  .cart-item-cover { width: 52px; }
+  .cart-item-info h3 { font-size: 13px; }
+  .qty-stepper { padding: 4px 8px; }
+  .cart-line-total { font-size: 13px; }
+  .remove-btn { width: 28px; height: 28px; font-size: 18px; }
+  .book-modal-overlay { padding: 8px; }
+  .toast { bottom: 16px; max-width: calc(100vw - 24px); padding: 12px 16px; }
+}
+
+/* Touch optimisation: bigger tap targets on coarse pointers */
+@media (pointer: coarse) {
+  .action-btn { min-width: 44px; min-height: 44px; }
+  .icon-btn { min-width: 44px; min-height: 44px; }
+  .carousel-btn { min-width: 44px; min-height: 44px; }
+  .qty-btn { min-width: 30px; min-height: 30px; }
+  .remove-btn { min-width: 34px; min-height: 34px; }
+  .pill { padding: 12px 18px; }
+}
+
+/* Landscape phones */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { min-height: auto; padding-bottom: 70px; }
+  .hero-title { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .hero-stats { margin-top: 30px; }
+  .hero-art { display: none; }
+  .scroll-hint { display: none; }
+  .page-hero { padding: calc(var(--nav-h) + 40px) 0 48px; }
+  .book-modal { max-height: 94vh; }
+  .drawer { padding: 14px; }
 }

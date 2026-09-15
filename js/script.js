@@ -123,6 +123,67 @@ const CATEGORY_ICONS = {
 };
 
 /* ---------- 03. Book card renderer ---------- */
+/* Missing covers are swapped for a generated SVG placeholder so the demo
+   catalog always renders something book-like. */
+function coverFallback(img) {
+  if (!img) return;
+  img.onerror = null;
+  img.setAttribute('alt', 'Cover of ' + (img.dataset.title || 'book'));
+  img.src = coverPlaceholder(img.dataset.title || 'Book', img.dataset.author || 'BookHaven');
+}
+
+window.BHcovers = window.BHcovers || { placeholders: new Map() };
+
+function coverPlaceholder(title, author) {
+  const key = title + '|' + author;
+  const cached = window.BHcovers.placeholders.get(key);
+  if (cached) return cached;
+
+  const esc = (s) => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+
+  const words = String(title).split(/\s+/).slice(0, 4);
+  const lines = [];
+  let cur = '';
+  words.forEach((w) => {
+    if ((cur + ' ' + w).trim().length <= 18) cur = (cur + ' ' + w).trim();
+    else { lines.push(cur); cur = w; }
+  });
+  if (cur) lines.push(cur);
+  const text = lines.slice(0, 4).map((l) => esc(l)).join('</tspan><tspan x="300">');
+  const authorText = esc(String(author));
+  const golden = '#c9a227';
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#1c1c22"/>
+          <stop offset="1" stop-color="#0b0b0e"/>
+        </linearGradient>
+        <linearGradient id="go" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#e0bc4b"/><stop offset="1" stop-color="#c9a227"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="900" rx="22" fill="url(#g)"/>
+      <rect x="26" y="26" width="548" height="848" rx="16" fill="none" stroke="#c9a227" stroke-opacity=".35" stroke-width="2"/>
+      <rect x="240" y="120" width="120" height="4" fill="url(#go)"/>
+      <text x="300" y="205" font-family="Georgia,serif" font-size="23" font-weight="bold" fill="#e0bc4b" text-anchor="middle" letter-spacing="4">BOOKHAVEN</text>
+      <g font-family="Georgia,serif" font-size="38" font-weight="bold" fill="#f6f1e4" text-anchor="middle">
+        <text x="300" y="470">
+          <tspan x="300">` + text + `</tspan>
+        </text>
+      </g>
+      <line x1="250" y1="560" x2="350" y2="560" stroke="#c9a227" stroke-opacity=".5" stroke-width="1.5"/>
+      <text x="300" y="640" font-family="Arial,sans-serif" font-size="22" fill="#9a978e" text-anchor="middle">` + authorText + `</text>
+      <text x="300" y="820" font-family="Arial,sans-serif" font-size="14" fill="#6f6f78" text-anchor="middle" letter-spacing="3">FICTION &amp; MORE</text>
+    </svg>`;
+
+  const uri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  window.BHcovers.placeholders.set(key, uri);
+  return uri;
+}
+
 function bookCard(book) {
   const wished = store.wishlist.includes(book.id);
   const inStock = book.stock == null || book.stock > 0;
@@ -136,7 +197,10 @@ function bookCard(book) {
   return `
   <article class="book-card" data-id="${book.id}">
     <div class="book-cover">
-      <img src="${book.cover}" alt="Cover of ${book.title}" loading="lazy">
+      <img src="${book.cover}" alt="Cover of ${book.title}" loading="lazy"
+           data-title="${String(book.title).replace(/"/g, '&quot;')}"
+           data-author="${String(book.author).replace(/"/g, '&quot;')}"
+           onerror="BHcovers && BHcovers.fallback ? BHcovers.fallback(this) : coverFallback(this)">
       ${badge}
       ${inStock ? '' : '<span class="badge badge-oos">Out of Stock</span>'}
       <span class="quick-view">View Details</span>
@@ -174,11 +238,61 @@ function bookCard(book) {
   </article>`;
 }
 
+window.BHcovers.fallback = coverFallback;
+
 function renderGrid(container, books) {
   if (!container) return;
-  container.innerHTML = books.length
-    ? books.map(bookCard).join('')
-    : '<p class="no-results">No books found. Try a different search.</p>';
+  createPagedGrid(container, books);
+}
+
+/* ---------- 03b. Paged grids ----------
+   The catalog holds 500+ books per category, so large result sets are
+   rendered incrementally (60 at a time) with a "Show more" button instead
+   of trying to build thousands of DOM nodes at once. Horizontal carousels
+   and small arrays render in full. */
+const PAGE_SIZE = 60;
+const pagedState = new Map(); // element -> { all, shown }
+
+function createPagedGrid(container, books) {
+  const all = Array.isArray(books) ? books : [];
+  if (container.classList.contains('carousel') || all.length <= PAGE_SIZE) {
+    pagedState.delete(container);
+    container.innerHTML = all.length
+      ? all.map(bookCard).join('')
+      : '<p class="no-results">No books found. Try a different search.</p>';
+    return;
+  }
+  pagedState.set(container, { all, shown: 0 });
+  container.innerHTML = '';
+  loadMoreInto(container);
+}
+
+function loadMoreInto(container) {
+  const st = pagedState.get(container);
+  if (!st) return;
+  const start = st.shown;
+  const end = Math.min(st.all.length, start + PAGE_SIZE);
+  const chunk = st.all.slice(start, end);
+
+  const frag = document.createElement('div');
+  frag.innerHTML = chunk.map(bookCard).join('');
+
+  let wrap = container.querySelector('.load-more-wrap');
+  while (frag.firstChild) container.insertBefore(frag.firstChild, wrap);
+
+  st.shown = end;
+  const remaining = st.all.length - end;
+
+  if (remaining > 0) {
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'load-more-wrap';
+      container.appendChild(wrap);
+    }
+    wrap.innerHTML = `<button type="button" class="btn btn-ghost load-more" data-more>Show more (${remaining} more)</button>`;
+  } else if (wrap) {
+    wrap.remove();
+  }
 }
 
 /* ---------- 04. Per-page rendering ---------- */
@@ -366,7 +480,7 @@ function renderCategoryPrompt() {
 function renderCategoryGroups(books, genre = null) {
   const wrap = $('#cat-groups');
   if (!wrap) return;
-  const html = CATEGORIES.map((cat) => {
+  wrap.innerHTML = CATEGORIES.map((cat) => {
     const items = books.filter((b) => b.category === cat.name);
     if (!items.length) return '';
     const title = genre && activeGenre && cat.name === activeGenre.cat ? genre : cat.name;
@@ -376,11 +490,18 @@ function renderCategoryGroups(books, genre = null) {
         <h3 class="cat-group-title">${title}</h3>
         <span class="cat-group-count">${items.length}</span>
       </div>
-      <div class="book-grid">${items.map(bookCard).join('')}</div>
+      <div class="book-grid" data-cat="${cat.name}"></div>
     </section>`;
   }).join('');
 
-  wrap.innerHTML = html || '<p class="no-results">No books found. Try a different search.</p>';
+  $$('#cat-groups .book-grid').forEach((grid) => {
+    const catName = grid.dataset.cat;
+    createPagedGrid(grid, books.filter((b) => b.category === catName));
+  });
+
+  if (!$('#cat-groups .cat-group')) {
+    wrap.innerHTML = '<p class="no-results">No books found. Try a different search.</p>';
+  }
 }
 
 /* Cart page: line items + order summary */
@@ -774,7 +895,11 @@ function renderBookModal() {
   const discount = b.oldPrice ? Math.round((1 - b.price / b.oldPrice) * 100) : null;
 
   const cover = $('#bm-cover', bmEl);
-  if (cover) { cover.src = b.cover; cover.alt = 'Cover of ' + b.title; }
+  if (cover) {
+    cover.dataset.title = b.title; cover.dataset.author = b.author;
+    cover.onerror = function () { coverFallback(this); };
+    cover.src = b.cover; cover.alt = 'Cover of ' + b.title;
+  }
 
   const badge = $('#bm-badge', bmEl);
   if (b.isNew && discount) badge.textContent = 'New · -' + discount + '%';
@@ -821,6 +946,13 @@ function renderBookModal() {
 
 /* ---------- Global delegated events ---------- */
 document.addEventListener('click', (e) => {
+  const moreBtn = e.target.closest('[data-more]');
+  if (moreBtn) {
+    const grid = moreBtn.closest('.book-grid, .carousel');
+    if (grid) loadMoreInto(grid);
+    return;
+  }
+
   const wishBtn = e.target.closest('[data-wish]');
   if (wishBtn) { toggleWishlist(wishBtn.dataset.wish); return; }
 

@@ -127,53 +127,22 @@ ensureColumn('books', 'subcategory', 'TEXT DEFAULT \'\'');
 ensureColumn('books', 'description', 'TEXT DEFAULT \'\'');
 ensureColumn('books', 'stock', 'INTEGER DEFAULT 20');
 
-const SEED_BOOKS = [
-  { title: 'The Midnight Library', author: 'Matt Haig', category: "Fiction", cover: 'assets/covers/midnight-library.jpg', price: 14990, oldPrice: 19990, rating: 4.6, reviews: 18423, featured: true, bestseller: true, isNew: false },
-  { title: 'Atomic Habits', author: 'James Clear', category: "Fiction", cover: 'assets/covers/atomic-habits.jpg', price: 16990, oldPrice: null, rating: 4.8, reviews: 40215, featured: true, bestseller: true, isNew: false },
-  { title: 'Zero to One', author: 'Peter Thiel', category: 'Business', cover: 'assets/covers/zero-to-one.jpg', price: 13490, oldPrice: null, rating: 4.2, reviews: 8912, featured: true, bestseller: false, isNew: false },
-  { title: 'The Psychology of Money', author: 'Morgan Housel', category: 'Business', cover: 'assets/covers/psychology-of-money.jpg', price: 15990, oldPrice: null, rating: 4.7, reviews: 23540, featured: true, bestseller: true, isNew: false },
-  { title: 'The Silent Patient', author: 'Alex Michaelides', category: "Fiction", cover: 'assets/covers/silent-patient.jpg', price: 12990, oldPrice: null, rating: 4.4, reviews: 19783, featured: true, bestseller: false, isNew: false },
-  { title: 'Clean Code', author: 'Robert C. Martin', category: 'Technology', cover: 'assets/covers/clean-code.jpg', price: 34990, oldPrice: 39990, rating: 4.5, reviews: 12450, featured: true, bestseller: false, isNew: false },
-  { title: 'Dune', author: 'Frank Herbert', category: 'Science', cover: 'assets/covers/dune.jpg', price: 10990, oldPrice: null, rating: 4.8, reviews: 31208, featured: true, bestseller: true, isNew: false },
-  { title: 'The Alchemist', author: 'Paulo Coelho', category: "Fiction", cover: 'assets/covers/alchemist.jpg', price: 11990, oldPrice: null, rating: 4.5, reviews: 27591, featured: true, bestseller: false, isNew: false },
-  { title: 'Sapiens', author: 'Yuval Noah Harari', category: 'Science', cover: 'assets/covers/sapiens.jpg', price: 19990, oldPrice: null, rating: 4.7, reviews: 28934, featured: false, bestseller: true, isNew: false },
-  { title: 'The 48 Laws of Power', author: 'Robert Greene', category: 'Business', cover: 'assets/covers/48-laws.jpg', price: 17490, oldPrice: null, rating: 4.5, reviews: 30112, featured: false, bestseller: true, isNew: false },
-  { title: 'Educated', author: 'Tara Westover', category: "Fiction", cover: 'assets/covers/educated.jpg', price: 13990, oldPrice: null, rating: 4.6, reviews: 16777, featured: false, bestseller: true, isNew: false },
-  { title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', category: 'Science', cover: 'assets/covers/thinking.jpg', price: 15500, oldPrice: null, rating: 4.3, reviews: 14089, featured: false, bestseller: true, isNew: false },
-  { title: 'Tomorrow, and Tomorrow, and Tomorrow', author: 'Gabrielle Zevin', category: "Fiction", cover: 'assets/covers/tomorrow.jpg', price: 18990, oldPrice: null, rating: 4.4, reviews: 9821, featured: false, bestseller: false, isNew: true },
-  { title: 'The Creative Act', author: 'Rick Rubin', category: "Fiction", cover: 'assets/covers/creative-act.jpg', price: 22000, oldPrice: null, rating: 4.5, reviews: 12431, featured: false, bestseller: false, isNew: true },
-  { title: 'Demon Copperhead', author: 'Barbara Kingsolver', category: "Fiction", cover: 'assets/covers/demon-copperhead.jpg', price: 17500, oldPrice: null, rating: 4.6, reviews: 11042, featured: false, bestseller: false, isNew: true },
-  { title: 'The Wager', author: 'David Grann', category: "Fiction", cover: 'assets/covers/wager.jpg', price: 19000, oldPrice: null, rating: 4.7, reviews: 15387, featured: false, bestseller: false, isNew: true },
-  { title: 'The Four Agreements', author: 'Don Miguel Ruiz', category: 'Business', cover: 'assets/covers/four-agreements.jpg', price: 7990, oldPrice: 12990, rating: 4.6, reviews: 45870, featured: false, bestseller: false, isNew: false },
-  { title: 'Deep Work', author: 'Cal Newport', category: 'Business', cover: 'assets/covers/deep-work.jpg', price: 11990, oldPrice: 17990, rating: 4.6, reviews: 20134, featured: false, bestseller: false, isNew: false },
-  { title: 'Pride and Prejudice', author: 'Jane Austen', category: 'Romance', cover: 'assets/covers/pride-prejudice.jpg', price: 9990, oldPrice: null, rating: 4.7, reviews: 34002, featured: false, bestseller: true, isNew: false },
-  { title: 'The Little Prince', author: 'Antoine de Saint-Exupery', category: "Children's", cover: 'assets/covers/little-prince.jpg', price: 8990, oldPrice: null, rating: 4.9, reviews: 52010, featured: false, bestseller: true, isNew: false },
-  { title: 'Where the Crawdads Sing', author: 'Delia Owens', category: 'Fiction', cover: 'assets/covers/where-crawdads-sing.jpg', price: 12990, oldPrice: null, rating: 4.8, reviews: 28000, featured: false, bestseller: true, isNew: false },
-  { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', category: 'Fiction', cover: 'assets/covers/great-gatsby.jpg', price: 10990, oldPrice: null, rating: 4.4, reviews: 46000, featured: false, bestseller: true, isNew: false },
-  { title: 'To Kill a Mockingbird', author: 'Harper Lee', category: 'Fiction', cover: 'assets/covers/to-kill-a-mockingbird.jpg', price: 11490, oldPrice: null, rating: 4.8, reviews: 52000, featured: false, bestseller: true, isNew: false },
-  { title: '1984', author: 'George Orwell', category: 'Fiction', cover: 'assets/covers/1984.jpg', price: 9990, oldPrice: null, rating: 4.7, reviews: 61000, featured: false, bestseller: true, isNew: false },
-  { title: 'The Hobbit', author: 'J.R.R. Tolkien', category: 'Fiction', cover: 'assets/covers/hobbit.jpg', price: 12990, oldPrice: null, rating: 4.9, reviews: 48000, featured: false, bestseller: true, isNew: false },
-  { title: 'The Kite Runner', author: 'Khaled Hosseini', category: 'Fiction', cover: 'assets/covers/kite-runner.jpg', price: 13490, oldPrice: null, rating: 4.7, reviews: 31000, featured: false, bestseller: true, isNew: false },
-  { title: 'The Book Thief', author: 'Markus Zusak', category: 'Fiction', cover: 'assets/covers/book-thief.jpg', price: 12490, oldPrice: null, rating: 4.8, reviews: 29000, featured: false, bestseller: false, isNew: false },
-  { title: 'A Man Called Ove', author: 'Fredrik Backman', category: 'Fiction', cover: 'assets/covers/a-man-called-ove.jpg', price: 11990, oldPrice: null, rating: 4.7, reviews: 22000, featured: false, bestseller: false, isNew: false },
-  { title: 'Circe', author: 'Madeline Miller', category: 'Fiction', cover: 'assets/covers/circe.jpg', price: 14990, oldPrice: null, rating: 4.6, reviews: 18000, featured: false, bestseller: false, isNew: true },
-  { title: 'Project Hail Mary', author: 'Andy Weir', category: 'Fiction', cover: 'assets/covers/project-hail-mary.jpg', price: 15990, oldPrice: null, rating: 4.8, reviews: 25000, featured: false, bestseller: false, isNew: true },
-  { title: 'A Brief History of Time', author: 'Stephen Hawking', category: 'Science', cover: 'assets/covers/brief-history-of-time.jpg', price: 13990, oldPrice: null, rating: 4.6, reviews: 24000, featured: false, bestseller: true, isNew: false },
-  { title: 'The Selfish Gene', author: 'Richard Dawkins', category: 'Science', cover: 'assets/covers/selfish-gene.jpg', price: 12990, oldPrice: null, rating: 4.5, reviews: 12000, featured: false, bestseller: false, isNew: false },
-  { title: 'Cosmos', author: 'Carl Sagan', category: 'Science', cover: 'assets/covers/cosmos.jpg', price: 15990, oldPrice: null, rating: 4.7, reviews: 16000, featured: false, bestseller: false, isNew: false },
-  { title: 'Rich Dad Poor Dad', author: 'Robert Kiyosaki', category: 'Business', cover: 'assets/covers/rich-dad-poor-dad.jpg', price: 8990, oldPrice: 12990, rating: 4.5, reviews: 38000, featured: false, bestseller: true, isNew: false },
-  { title: 'Start with Why', author: 'Simon Sinek', category: 'Business', cover: 'assets/covers/start-with-why.jpg', price: 14990, oldPrice: null, rating: 4.3, reviews: 9000, featured: false, bestseller: false, isNew: false },
-  { title: 'The Lean Startup', author: 'Eric Ries', category: 'Business', cover: 'assets/covers/lean-startup.jpg', price: 13990, oldPrice: null, rating: 4.3, reviews: 11000, featured: false, bestseller: false, isNew: false },
-  { title: 'The Pragmatic Programmer', author: 'David Thomas', category: 'Technology', cover: 'assets/covers/pragmatic-programmer.jpg', price: 39990, oldPrice: 49990, rating: 4.5, reviews: 8000, featured: false, bestseller: false, isNew: false },
-  { title: 'Algorithms to Live By', author: 'Brian Christian', category: 'Technology', cover: 'assets/covers/algorithms-to-live-by.jpg', price: 13990, oldPrice: null, rating: 4.3, reviews: 6000, featured: false, bestseller: false, isNew: false },
-  { title: 'The Design of Everyday Things', author: 'Don Norman', category: 'Technology', cover: 'assets/covers/design-of-everyday-things.jpg', price: 16990, oldPrice: null, rating: 4.2, reviews: 7500, featured: false, bestseller: false, isNew: false },
-  { title: 'It Ends with Us', author: 'Colleen Hoover', category: 'Romance', cover: 'assets/covers/it-ends-with-us.jpg', price: 11990, oldPrice: null, rating: 4.5, reviews: 33000, featured: false, bestseller: true, isNew: false },
-  { title: 'Me Before You', author: 'Jojo Moyes', category: 'Romance', cover: 'assets/covers/me-before-you.jpg', price: 12990, oldPrice: null, rating: 4.4, reviews: 14000, featured: false, bestseller: false, isNew: false },
-  { title: 'The Notebook', author: 'Nicholas Sparks', category: 'Romance', cover: 'assets/covers/notebook.jpg', price: 10990, oldPrice: null, rating: 4.5, reviews: 27000, featured: false, bestseller: false, isNew: false },
-  { title: "Charlotte's Web", author: 'E.B. White', category: "Children's", cover: 'assets/covers/charlottes-web.jpg', price: 8990, oldPrice: null, rating: 4.9, reviews: 30000, featured: false, bestseller: true, isNew: false },
-  { title: 'Matilda', author: 'Roald Dahl', category: "Children's", cover: 'assets/covers/matilda.jpg', price: 9490, oldPrice: null, rating: 4.8, reviews: 21000, featured: false, bestseller: false, isNew: false },
-  { title: "Harry Potter and the Philosopher's Stone", author: 'J.K. Rowling', category: "Children's", cover: 'assets/covers/harry-potter-1.jpg', price: 11990, oldPrice: null, rating: 4.9, reviews: 58000, featured: false, bestseller: true, isNew: false }
-];
+const SEED_JSON_PATH = path.join(__dirname, 'scripts', 'seed-data.json');
+let SEED_BOOKS = [];
+try {
+  if (fs.existsSync(SEED_JSON_PATH)) {
+    SEED_BOOKS = JSON.parse(fs.readFileSync(SEED_JSON_PATH, 'utf8'));
+    if (!Array.isArray(SEED_BOOKS) || !SEED_BOOKS.length) SEED_BOOKS = [];
+  }
+} catch (e) {
+  console.error('Failed to load seed data:', e.message);
+}
+if (!SEED_BOOKS.length) {
+  SEED_BOOKS = [
+    { title: 'The Midnight Library', author: 'Matt Haig', category: "Fiction", cover: 'assets/covers/midnight-library.jpg', price: 14990, oldPrice: 19990, rating: 4.6, reviews: 18423, featured: true, bestseller: true, isNew: false },
+    { title: 'The Silent Patient', author: 'Alex Michaelides', category: "Fiction", cover: 'assets/covers/silent-patient.jpg', price: 12990, oldPrice: null, rating: 4.4, reviews: 19783, featured: true, bestseller: false, isNew: false }
+  ];
+}
 
 const SUBGENRE_BY_CAT = {
   "Fiction":    ['Mystery, Thriller & Suspense', 'Fantasy', 'Literary Fiction', 'Historical Fiction'],
@@ -200,18 +169,46 @@ function seedMeta(book, i) {
   };
 }
 
-const bookCount = db.prepare('SELECT COUNT(*) AS n FROM books').get().n;
-if (bookCount === 0) {
+/* Insert a batch of seed books inside a single transaction for speed. */
+function seedBooksIfEmpty() {
+  const bookCount = db.prepare('SELECT COUNT(*) AS n FROM books').get().n;
+  if (bookCount > 0) return;
+
   const insert = db.prepare(`
     INSERT INTO books (title, author, category, subcategory, description, cover, price, oldPrice, stock, rating, reviews, featured, bestseller, isNew)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  for (const [i, b] of SEED_BOOKS.entries()) {
-    const m = seedMeta(b, i);
-    insert.run(b.title, b.author, b.category, m.subcategory, m.description, b.cover, b.price, b.oldPrice, m.stock, b.rating, b.reviews, b.featured ? 1 : 0, b.bestseller ? 1 : 0, b.isNew ? 1 : 0);
+
+  db.exec('BEGIN');
+  try {
+    for (const [i, b] of SEED_BOOKS.entries()) {
+      const m = seedMeta(b, i);
+      insert.run(
+        b.title,
+        b.author,
+        b.category,
+        b.subcategory || m.subcategory,
+        b.description || m.description,
+        b.cover,
+        b.price,
+        b.oldPrice != null ? b.oldPrice : null,
+        b.stock != null ? b.stock : m.stock,
+        b.rating || 0,
+        b.reviews || 0,
+        b.featured ? 1 : 0,
+        b.bestseller ? 1 : 0,
+        b.isNew ? 1 : 0
+      );
+    }
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw err;
   }
   console.log(`Seeded database with ${SEED_BOOKS.length} books.`);
 }
+
+seedBooksIfEmpty();
 
 /* Any legacy rows missing values after a migration get sensible defaults,
    varied per book so genres stay representative. */
@@ -377,7 +374,15 @@ app.use((req, res, next) => {
   return res.status(404).json({ error: 'Not found' });
 });
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname), {
+  /* CSS/JS/HTML must revalidate on every load so the browser can never keep
+     serving a stale (pre-responsive) stylesheet or stale scripts. */
+  setHeaders(res, filePath) {
+    if (/\.(css|js|html|svg|json|webmanifest)$/i.test(filePath)) {
+      res.set('Cache-Control', 'no-cache');
+    }
+  }
+}));
 app.use('/uploads', express.static(UPLOAD_DIR));
 
 /* Never cache API responses so admin-panel edits show up immediately. */

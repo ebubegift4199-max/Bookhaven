@@ -239,18 +239,32 @@ const FLAG_META = [
   ['N', 'isNew']
 ];
 
-function renderBooks(query = '') {
-  const q = query.trim().toLowerCase();
-  const list = books.filter((b) =>
-    !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) ||
-    b.category.toLowerCase().includes(q));
+/* The catalog now holds thousands of books, so the table renders in pages
+   (60 rows at a time) with a "Show more" button to keep the DOM light. */
+const ADMIN_PAGE_SIZE = 60;
+let adminFiltered = [];
+let adminShown = 0;
 
-  const tbody = $('#books-tbody');
-  tbody.innerHTML = list.map((b) => `
+function rowCoverFallback(img) {
+  if (!img) return;
+  img.onerror = null;
+  img.style.objectFit = 'cover';
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="150" viewBox="0 0 100 150">' +
+    '<rect width="100" height="150" rx="6" fill="#1d1d24"/>' +
+    '<rect x="6" y="6" width="88" height="138" rx="4" fill="none" stroke="#c9a227" stroke-opacity=".4"/>' +
+    '<rect x="40" y="26" width="20" height="3" fill="#c9a227"/>' +
+    '<text x="50" y="60" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#f6f1e4" text-anchor="middle">B</text>' +
+    '<text x="50" y="76" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#f6f1e4" text-anchor="middle">H</text>' +
+    '<text x="50" y="118" font-family="Arial,sans-serif" font-size="7" fill="#9a978e" text-anchor="middle">BOOKHAVEN</text></svg>');
+}
+
+function bookRow(b) {
+  return `
     <tr data-id="${b.id}">
       <td>
         <div class="book-cell">
-          <img src="${b.cover}" alt="" loading="lazy">
+<img src="${b.cover}" alt="" loading="lazy" onerror="rowCoverFallback(this)">
           <div><strong>${b.title}</strong><span>${b.author}</span></div>
         </div>
       </td>
@@ -270,10 +284,53 @@ function renderBooks(query = '') {
           </button>
         </div>
       </td>
-    </tr>`).join('') || '<tr><td colspan="7" class="no-results">No books found.</td></tr>';
+    </tr>`;
+}
+
+function renderBooks(query = '') {
+  const q = query.trim().toLowerCase();
+  adminFiltered = books.filter((b) =>
+    !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) ||
+    b.category.toLowerCase().includes(q));
+  adminShown = 0;
 
   const count = $('#book-count');
-  if (count) count.textContent = `${list.length} of ${books.length} books`;
+  if (count) count.textContent = `${adminFiltered.length} of ${books.length} books`;
+
+  addAdminRows();
+  updateAdminMore();
+}
+
+function addAdminRows() {
+  const tbody = $('#books-tbody');
+  if (!tbody) return;
+  const chunk = adminFiltered.slice(adminShown, adminShown + ADMIN_PAGE_SIZE);
+  if (!chunk.length && adminShown === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="no-results">No books found.</td></tr>';
+  } else {
+    tbody.insertAdjacentHTML('beforeend', chunk.map(bookRow).join(''));
+  }
+  adminShown += chunk.length;
+}
+
+function updateAdminMore() {
+  const remaining = adminFiltered.length - adminShown;
+  let wrap = $('#admin-more-wrap');
+  const tableWrap = document.querySelector('#panel-books .table-wrap');
+
+  if (remaining <= 0) {
+    if (wrap) wrap.remove();
+    return;
+  }
+  if (!wrap && tableWrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'admin-more-wrap';
+    wrap.className = 'load-more-wrap';
+    tableWrap.appendChild(wrap);
+  }
+  if (wrap) {
+    wrap.innerHTML = `<button type="button" class="btn btn-ghost load-more-btn" data-admin-more>Show more (${remaining} more)</button>`;
+  }
 }
 
 /* ---------- 05. Book modal (add / edit) ---------- */
@@ -477,7 +534,16 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-/* Table actions (edit / delete) — delegated */
+/* Table actions (edit / delete) and "Show more" — delegated */
+document.addEventListener('click', (e) => {
+  const more = e.target.closest('[data-admin-more]');
+  if (more) {
+    addAdminRows();
+    updateAdminMore();
+    return;
+  }
+});
+
 $('#books-tbody').addEventListener('click', async (e) => {
   const editBtn = e.target.closest('[data-edit]');
   if (editBtn) {
