@@ -45,8 +45,9 @@ async function loadBooks() {
       try { localStorage.setItem(BOOKS_CACHE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
       return;
     }
-  } catch (e) { /* fall back to cache */ }
+  } catch (e) { /* fall back to cache, then the static snapshot */ }
   BOOKS = loadBooksFromCache();
+  if (!BOOKS.length) BOOKS = await loadStaticBooks();
 }
 
 /* Categories with their blurb/icon are UI chrome; the names themselves and

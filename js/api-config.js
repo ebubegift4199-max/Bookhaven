@@ -68,3 +68,31 @@ const groupPriceInput = (v) => {
 
 /* Convert a formatted price field back to a plain number string. */
 const stripPriceGrouping = (v) => String(v ?? '').replace(/,/g, '');
+
+/* ---------- Static catalog fallback ----------
+   When the backend API is unreachable (GitHub Pages, file://, server down),
+   pages can still render the catalog from a generated snapshot file
+   (js/bookhaven-static-data.js, produced by `npm run export:books`). The
+   script is only fetched on demand inside this helper, never on every page
+   load while the API works. */
+const STATIC_BOOKS_SRC = 'js/bookhaven-static-data.js';
+
+function loadStaticBooks() {
+  return new Promise((resolve) => {
+    try {
+      if (Array.isArray(window.__BOOKHAVEN_STATIC_BOOKS__)) {
+        resolve(window.__BOOKHAVEN_STATIC_BOOKS__);
+        return;
+      }
+    } catch (e) { /* ignore */ }
+    const s = document.createElement('script');
+    s.src = STATIC_BOOKS_SRC;
+    s.onload = () => {
+      try {
+        resolve(Array.isArray(window.__BOOKHAVEN_STATIC_BOOKS__) ? window.__BOOKHAVEN_STATIC_BOOKS__ : []);
+      } catch (e) { resolve([]); }
+    };
+    s.onerror = () => resolve([]);
+    document.head.appendChild(s);
+  });
+}

@@ -47,6 +47,7 @@ async function loadBooks() {
     if (Array.isArray(data)) { books = data; persistLocal(); return; }
   } catch (e) { /* fall back to cache below */ }
   books = loadBooksFromStorage();
+  if (!books.length) books = await loadStaticBooks();
   persistLocal();
   if (!books.length) toast('Server unreachable — no saved book data found');
 }
