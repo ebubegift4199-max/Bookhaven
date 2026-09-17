@@ -3,3 +3,4 @@ books.db
 *.log
 .env
 uploads/
+Storyverse/
