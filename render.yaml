@@ -1,12 +1,18 @@
 # Render.com blueprint — deploys the Node backend (which also serves the
-# static site). SQLite file + uploaded images live on a persistent disk so
-# admin edits and customer orders survive restarts and deploys.
+# static site). By default a SQLite file + uploaded images live on a
+# persistent disk so admin edits and customer orders survive restarts.
+# For the live site we RECOMMEND Supabase instead:
+#   - set DATABASE_URL (secret) to your Supabase connection string, and
+#   - run supabase/schema.sql once in the Supabase SQL Editor.
+# When DATABASE_URL is set the app ignores SQLite entirely and reads/writes
+# PostgreSQL (books, orders, users, contact messages all live in Supabase);
+# the persistent disk is then only used for uploaded cover images.
 #
 # To deploy:
 #   1. Push this repository to GitHub/GitLab.
 #   2. In Render: New -> Blueprint -> select the repo.
-#   3. Set the secrets ADMIN_EMAIL / ADMIN_PASSWORD (and SITE_URL once the
-#      site URL is known) in Settings -> Environment.
+#   3. Set the secrets ADMIN_EMAIL / ADMIN_PASSWORD / DATABASE_URL (and
+#      SITE_URL once the site URL is known) in Settings -> Environment.
 #   4. After the first deploy, open $RENDER_URL/account.html and sign in.
 #
 # NOTE: node:sqlite requires Node 22.5+. Render's default is fine once
@@ -47,4 +53,40 @@ services:
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD
+        sync: false
+      # Supabase hosted database. Example (yours will differ):
+      #   postgresql://postgres.ABC123:pASSWORD@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+      # (Session pooler URI — see Project Settings -> Database.) Once set, the
+      # app uses Supabase for all data; leave unset to use the SQLite disk.
+      # Remember to run supabase/schema.sql once in the Supabase SQL Editor.
+      - key: DATABASE_URL
+        sync: false
+      # Contact form: forwarded by email to this address. Messages are also
+      # always saved to the database (Admin -> Messages). To enable email
+      # forwarding, set SMTP_USER/SMTP_PASS as secrets too (Gmail app password).
+      - key: CONTACT_RECIPIENT
+        value: "Bookhaven41@gmail.com"
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      # Social sign-in credentials (sync:false secrets — set in Render's
+      # Settings -> Environment after creating the OAuth apps). Any provider
+      # left blank is simply hidden from the account page. Remember to
+      # register <SITE_URL>/api/auth/<provider>/callback in each console.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FACEBOOK_APP_ID
+        sync: false
+      - key: FACEBOOK_APP_SECRET
+        sync: false
+      - key: INSTAGRAM_CLIENT_ID
+        sync: false
+      - key: INSTAGRAM_CLIENT_SECRET
         sync: false

@@ -743,6 +743,72 @@ if (footerForm && !$('.footer-newsletter-msg', footerForm.parentElement)) {
   bindNewsletter(footerForm, msg);
 }
 
+/* ---------- 07b. Contact form (contact.html) ----------
+   Messages are saved server-side (Admin -> Messages) and forwarded by email
+   to the store inbox. When no backend is reachable (e.g. GitHub Pages), open
+   the visitor's email program with the message pre-filled instead, so nothing
+   is ever lost. */
+const CONTACT_EMAIL = 'Bookhaven41@gmail.com';
+const contactForm = $('#contact-form');
+if (page === 'contact' && contactForm) {
+  const cfMsg = $('#contact-msg');
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button[type="submit"]');
+    const name = $('#cf-name').value.trim();
+    const email = $('#cf-email').value.trim();
+    const subject = $('#cf-subject').value.trim();
+    const message = $('#cf-message').value.trim();
+
+    if (!name) {
+      cfMsg.textContent = 'Please enter your name.';
+      cfMsg.className = 'contact-msg err';
+      $('#cf-name').focus();
+      return;
+    }
+    if (!EMAIL_RE.test(email)) {
+      cfMsg.textContent = 'Please enter a valid email address.';
+      cfMsg.className = 'contact-msg err';
+      $('#cf-email').focus();
+      return;
+    }
+    if (message.length < 10) {
+      cfMsg.textContent = 'Please write a message of at least 10 characters.';
+      cfMsg.className = 'contact-msg err';
+      $('#cf-message').focus();
+      return;
+    }
+
+    cfMsg.textContent = 'Sending your message…';
+    cfMsg.className = 'contact-msg';
+    btn.disabled = true;
+
+    const mailHref = 'mailto:' + CONTACT_EMAIL +
+      '?subject=' + encodeURIComponent(subject || 'Website message') +
+      '&body=' + encodeURIComponent(
+        'Hi BookHaven,\n\n' + message + '\n\n— ' + name + '\n' + email);
+
+    try {
+      const res = await fetch(API_BASE + '/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, subject, message })
+      });
+      if (!res.ok) throw new Error('Server rejected the message');
+      cfMsg.textContent = "Thank you! Your message has been sent. We'll reply within one business day.";
+      cfMsg.className = 'contact-msg ok';
+      contactForm.reset();
+    } catch (err) {
+      /* Backend unreachable — open the visitor's email app as a fallback. */
+      window.location.href = mailHref;
+      cfMsg.innerHTML = `We couldn't reach the server just now, so your email app was opened with the message ready to send. If nothing happened, <a href="${mailHref}">click here to email <strong>${CONTACT_EMAIL}</strong></a> directly.`;
+      cfMsg.className = 'contact-msg err';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
 /* ---------- 08. Mobile drawer ---------- */
 const hamburger = $('#hamburger');
 const drawer = $('#drawer');
@@ -1064,6 +1130,27 @@ if (accountForm) {
     if (authSub) authSub.textContent = 'Enter your admin email and password to open the admin panel.';
   }
 
+  /* Landed back here after a social sign-in? The backend redirects to
+     /account.html?token=... (success) or /account.html?error=... (failure).
+     Store the session token so the restore step below picks it up. */
+  (function handleOAuthResult() {
+    const q = new URLSearchParams(location.search);
+    const tok = q.get('token');
+    const err = q.get('error');
+    if (tok && tok.length) {
+      setToken(tok);
+      history.replaceState(null, '', location.pathname);
+    }
+    if (err) {
+      msg.textContent = ({
+        not_configured: 'This sign-in option is not set up on this server yet. Use email and password instead, or ask the store owner to enable it.',
+        signin_failed: 'That sign-in did not complete. Please try again.'
+      })[err] || 'That sign-in did not complete. Please try again.';
+      msg.className = 'auth-msg err';
+      history.replaceState(null, '', location.pathname);
+    }
+  })();
+
   const setMode = (mode) => {
     authMode = mode;
     const signup = mode === 'signup';
@@ -1082,8 +1169,28 @@ if (accountForm) {
 
   if (authToggleBtn) authToggleBtn.addEventListener('click', () => setMode(authMode === 'signin' ? 'signup' : 'signin'));
 
+  /* Which social sign-in providers the server is configured for. Updated by
+     the backend at /config.js — blank on static hosts (no backend). */
+  const SOCIAL_AUTH = (() => {
+    try {
+      const cfg = window.__BOOKHAVEN_CONFIG__ || {};
+      return (cfg.SOCIAL_AUTH && typeof cfg.SOCIAL_AUTH === 'object') ? cfg.SOCIAL_AUTH : {};
+    } catch (e) { return {}; }
+  })();
+
   $$('.social-login-btn').forEach((btn) => {
-    btn.addEventListener('click', () => showToast(`Continue with ${btn.dataset.social} — coming soon`));
+    btn.addEventListener('click', () => {
+      const provider = { Google: 'google', Facebook: 'facebook', Instagram: 'instagram' }[btn.dataset.social];
+      const meta = SOCIAL_AUTH[provider];
+      if (!meta || !meta.redirectUrl) {
+        msg.textContent = 'This sign-in option is not set up on this server yet. Use your email and password instead, or ask the store owner to enable it.';
+        msg.className = 'auth-msg err';
+        return;
+      }
+      msg.textContent = `Connecting to ${provider}…`;
+      msg.className = 'auth-msg';
+      window.location.href = API_BASE + meta.redirectUrl;
+    });
   });
 
   function showSignedIn(user) {

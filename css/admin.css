@@ -721,3 +721,6 @@ body.locked { overflow: hidden; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .admin-topbar { flex-wrap: wrap; }
 }
+
+/* Contact message table: keep long messages on one trimmed line */
+.msg-cell { max-width: 340px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); font-size: 13.5px; }

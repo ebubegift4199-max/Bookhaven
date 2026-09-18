@@ -171,7 +171,7 @@ const fmt = (n) => fmtPrice(n);
 const fmtReviews = (n) => (n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n);
 
 /* ---------- 02. Tabs ---------- */
-const TITLES = { dashboard: 'Dashboard', books: 'Books', orders: 'Orders' };
+const TITLES = { dashboard: 'Dashboard', books: 'Books', orders: 'Orders', messages: 'Messages' };
 
 function switchTab(name) {
   $$('.admin-nav-item').forEach((btn) => {
@@ -637,6 +637,66 @@ function renderOrders() {
     </tr>`).join('');
 }
 
+/* ---------- 06b. Contact messages (server-backed) ---------- */
+/* Messages come from the /api/contact endpoint. If the server is unreachable
+   they show as an empty list (the storefront falls back to opening the
+   visitor's own email app), so nothing displayed here is ever fabricated. */
+let MESSAGES = [];
+
+async function loadMessages() {
+  let token = '';
+  try { token = localStorage.getItem('bookhaven.auth') || ''; } catch (e) { /* ignore */ }
+  try {
+    const res = await fetch(API_BASE + '/api/contact', { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+    if (res.ok) {
+      const list = await res.json();
+      if (Array.isArray(list)) { MESSAGES = list; return; }
+    }
+  } catch (e) { /* fall back below */ }
+  MESSAGES = [];
+}
+
+const fmtDate = (d) => String(d || '').replace('T', ' ').slice(0, 16) || '—';
+
+function renderMessages() {
+  const tbody = $('#messages-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = MESSAGES.length ? MESSAGES.map((m) => `
+    <tr>
+      <td><strong>${escapeHtml(m.name)}</strong><br><span style="font-size:12px;color:var(--muted)">${escapeHtml(m.email)}</span></td>
+      <td><strong>${escapeHtml(m.subject || 'General')}</strong></td>
+      <td class="msg-cell" title="${escapeHtml(m.message)}">${escapeHtml(m.message)}</td>
+      <td>${fmtDate(m.created_at)}</td>
+      <td class="col-actions">
+        <div class="row-actions">
+          <button class="icon-btn del" data-msg="${m.id}" title="Delete message" aria-label="Delete message from ${escapeHtml(m.name)}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6.5 7l1 13h9l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="5" class="no-results">No messages yet — they will appear here as visitors use the contact form.</td></tr>';
+}
+
+const messagesTbody = $('#messages-tbody');
+if (messagesTbody) {
+  messagesTbody.addEventListener('click', async (e) => {
+    const delBtn = e.target.closest('[data-msg]');
+    if (!delBtn) return;
+    const id = Number(delBtn.dataset.msg);
+    const row = MESSAGES.find((m) => m.id === id);
+    if (!row) return;
+    if (!confirm(`Delete the message from ${row.name}? This cannot be undone.`)) return;
+    try {
+      await apiRequest('DELETE', '/api/contact/' + id);
+      MESSAGES = MESSAGES.filter((m) => m.id !== id);
+      renderMessages();
+      toast('Message deleted');
+    } catch (err) {
+      toast(err.message);
+    }
+  });
+}
+
 /* ---------- 07. Toast ---------- */
 const toastEl = $('#admin-toast');
 const toastMsg = $('.toast-msg', toastEl);
@@ -653,6 +713,8 @@ function toast(message) {
 window.addEventListener('admin:authed', async () => {
   await loadOrders();
   renderOrders();
+  await loadMessages();
+  renderMessages();
   renderDashboard();
 });
 
@@ -660,7 +722,9 @@ window.addEventListener('admin:authed', async () => {
   await loadBooks();
   await loadCategories();
   await loadOrders();
+  await loadMessages();
   renderDashboard();
   renderBooks();
   renderOrders();
+  renderMessages();
 })();

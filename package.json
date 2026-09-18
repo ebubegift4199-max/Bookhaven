@@ -1,7 +1,7 @@
 {
   "name": "bookhaven",
   "version": "1.0.0",
-  "description": "BookHaven bookstore — Express + SQLite backend serving the static frontend",
+  "description": "BookHaven bookstore — Express backend (SQLite for dev, Supabase/Postgres with DATABASE_URL) serving the static frontend",
   "main": "server.js",
   "engines": {
     "node": ">=22.5.0"
@@ -12,6 +12,8 @@
     "export:books": "node scripts/export-static-books.js"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "nodemailer": "^10.0.10",
+    "pg": "^8.23.0"
   }
 }
