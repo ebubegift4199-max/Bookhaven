@@ -32,7 +32,7 @@ function renderCheckout() {
   if (layout) layout.hidden = false;
 
   const subtotal = lines.reduce((s, l) => s + l.book.price * l.qty, 0);
-  const shipping = subtotal >= 35 ? 0 : 4.99;
+  const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
 
   const summary = $('#co-summary');
@@ -120,7 +120,7 @@ form.addEventListener('submit', async (e) => {
   if (!lines.length) return err('Your cart is empty.', form);
 
   const subtotal = lines.reduce((s, l) => s + l.book.price * l.qty, 0);
-  const shipping = subtotal >= 35 ? 0 : 4.99;
+  const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
 
   /* Save the order: the server is the source of truth in production so the

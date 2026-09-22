@@ -69,6 +69,13 @@ const groupPriceInput = (v) => {
 /* Convert a formatted price field back to a plain number string. */
 const stripPriceGrouping = (v) => String(v ?? '').replace(/,/g, '');
 
+/* ---------- Shipping policy (amounts in ₦) ---------- */
+/* Flat-rate delivery with free shipping on large orders. */
+const FREE_SHIP_THRESHOLD = 50000;
+const FLAT_SHIPPING = 4500;
+const shippingFor = (subtotal) =>
+  subtotal > 0 && subtotal < FREE_SHIP_THRESHOLD ? FLAT_SHIPPING : 0;
+
 /* ---------- Static catalog fallback ----------
    When the backend API is unreachable (GitHub Pages, file://, server down),
    pages can still render the catalog from a generated snapshot file

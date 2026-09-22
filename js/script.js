@@ -547,7 +547,7 @@ function renderCart() {
     </article>`).join('');
 
   const subtotal = lines.reduce((s, { book, qty }) => s + book.price * qty, 0);
-  const shipping = subtotal >= 35 ? 0 : 4.99;
+  const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
 
   summary.hidden = false;
