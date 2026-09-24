@@ -30,6 +30,7 @@
 'use strict';
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 /* ---------- 00. Environment configuration ---------- */
@@ -65,7 +66,8 @@ const SITE_URL = String(process.env.SITE_URL || '').trim().replace(/\/+$/, '');
    `npm start` keeps working unchanged. */
 let ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
-if (NODE_ENV === 'production' && (!ADMIN_EMAIL || !ADMIN_PASSWORD)) {
+const IS_SERVERLESS = process.env.VERCEL === '1';
+if (NODE_ENV === 'production' && !IS_SERVERLESS && (!ADMIN_EMAIL || !ADMIN_PASSWORD)) {
   console.error('Refusing to start: ADMIN_EMAIL and ADMIN_PASSWORD must be set in production (Render -> Settings -> Environment).');
   process.exit(1);
 }
@@ -101,8 +103,21 @@ const INSTAGRAM_CLIENT_SECRET = String(process.env.INSTAGRAM_CLIENT_SECRET || ''
 
 const TOKEN_TTL_MS = (Number(process.env.SESSION_TTL_DAYS) || 30) * 24 * 60 * 60 * 1000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '';             // '' = same origin, '*' = any, or an exact origin
-const UPLOAD_DIR = path.resolve(process.env.UPLOAD_DIR || path.join(__dirname, 'uploads'));
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+/* Uploaded cover images. On serverless/hosting platforms (Vercel) the
+   project directory is read-only (except /tmp), so fall back to a writable
+   temp dir when the normal location can't be created. */
+let UPLOAD_DIR = path.resolve(process.env.UPLOAD_DIR || path.join(__dirname, 'uploads'));
+try {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+} catch (err) {
+  if (IS_SERVERLESS) {
+    UPLOAD_DIR = path.join(os.tmpdir(), 'bookhaven-uploads');
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    console.warn(`Uploads dir is read-only here; using ${UPLOAD_DIR}. Uploaded covers survive only briefly on serverless hosts.`);
+  } else {
+    throw err;
+  }
+}
 
 /* ---------- 01. Database setup ----------
    The schema, migrations and seeding live in db.js / supabase/schema.sql;
@@ -351,7 +366,8 @@ const PUBLIC_PAGES = [
   'contact.html', 'careers.html', 'cart.html', 'categories.html', 'checkout.html',
   'deals.html', 'faq.html', 'new-releases.html', 'our-story.html',
   'privacy-policy.html', 'privacy.html', 'returns.html', 'shipping.html',
-  'terms.html', 'terms-of-service.html', 'track-order.html', 'wishlist.html'
+  'terms.html', 'terms-of-service.html', 'track-order.html', 'wishlist.html',
+  'favicon.ico'
 ];
 const PUBLIC_DIRS = ['/css', '/js', '/assets', '/img', '/uploads'];
 app.use((req, res, next) => {
@@ -865,7 +881,18 @@ async function start() {
   });
 }
 
-start().catch((err) => {
-  console.error('Failed to start BookHaven:', err.message);
-  process.exit(1);
-});
+/* Serverless platforms (Vercel) load server.js as a request handler instead
+   of starting a long-lived process: they import the Express app and invoke it
+   per request, on a read-only filesystem where app.listen() and in-process
+   seeding must not run. Export the app so the platform can call it.
+
+   When run as a plain Node process (`node server.js`, Render, local dev) we
+   start the HTTP server as before. */
+if (IS_SERVERLESS || require.main !== module) {
+  module.exports = app;
+} else {
+  start().catch((err) => {
+    console.error('Failed to start BookHaven:', err.message);
+    process.exit(1);
+  });
+}

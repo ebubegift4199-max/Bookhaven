@@ -55,6 +55,20 @@ Copy `.env.example` to `.env` and fill in the secrets you need. Key options:
 - **`render.yaml`** — Render blueprint (Node service + persistent disk for
   uploads). Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, optionally `DATABASE_URL`,
   SMTP and OAuth secrets in *Settings → Environment*.
+- **Vercel (`vercel.json`)** — deploys `server.js` as a serverless function
+  (`@vercel/node`). **Required env vars in *Project Settings →
+  Environment Variables*:**
+  - `DATABASE_URL` — **required**; points at your seeded Supabase DB. The
+    local SQLite file can't run on Vercel's read-only function filesystem.
+  - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — the admin account already in the DB
+    is used; these seed the account only.
+  - `SITE_URL` — public URL for error banners.
+  - Optionally `SMTP_*`, `CONTACT_RECIPIENT`, `GOOGLE_*` / `FACEBOOK_*` /
+    `INSTAGRAM_*`, `CORS_ORIGIN`.
+  The app auto-detects Vercel (`VERCEL=1`) and exports the Express app
+  instead of binding a port, and uploads fall back to the writable temp dir
+  (covers don't persist between cold starts — use a DB-hosted URL for
+  long-lived images).
 - **GitHub Pages** — the static storefront has a built-in fallback
   (`js/bookhaven-static-data.js`) so the catalog renders without a backend,
   but dynamic features (orders, contact, auth) need the Node server.

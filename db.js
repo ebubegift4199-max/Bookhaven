@@ -96,6 +96,15 @@ if (isPostgres) {
     ssl: DATABASE_URL.includes('sslmode') ? undefined : { rejectUnauthorized: false },
     max: 10
   });
+} else if (String(process.env.VERCEL || '').trim() === '1') {
+  /* Serverless hosts (Vercel) mount a read-only filesystem and set
+     NODE_ENV=production: the SQLite file cannot be created there, and the
+     site needs the persistent Supabase/Postgres database. Failing here with
+     a clear message beats an obscure FUNCTION_INVOCATION_FAILED crash. */
+  throw new Error(
+    'DATABASE_URL is required on Vercel — add it to Project Settings → Environment Variables ' +
+    '(see README → Deploying on Vercel). The local SQLite file cannot be used in serverless functions.'
+  );
 } else {
   const { DatabaseSync } = require('node:sqlite');
   sqlite = new DatabaseSync(path.resolve(process.env.DB_PATH || path.join(__dirname, 'books.db')));
