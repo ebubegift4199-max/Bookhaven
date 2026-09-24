@@ -43,6 +43,18 @@
     }
     details.faq-item[open] summary::after { transform: rotate(45deg); }
     details.faq-item .faq-body { padding: 0 20px 18px; color: var(--muted); font-size: 14.5px; }
+
+    .track-form {
+      margin-top: 18px; padding: 20px; border: 1px solid var(--line);
+      border-radius: var(--radius-sm); background: var(--card);
+    }
+    .track-form h3 { font-family: var(--font-head); font-size: 17px; color: var(--ink); margin-bottom: 6px; }
+    .track-form .sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+    .track-form .track-fields { display: flex; flex-direction: column; gap: 10px; }
+    .track-form .auth-field { width: 100%; }
+    .track-result { margin-top: 12px; min-height: 22px; font-size: 14.5px; font-weight: 600; }
+    .track-result.ok { color: #2e9e5b; }
+    .track-result.err { color: #c0392b; }
   </style>
 </head>
 <body data-page="faq">
@@ -217,6 +229,17 @@
           <summary>My tracking has not updated in a while. Is something wrong?</summary>
           <div class="faq-body">Tracking can lag during weekends, holidays or long-distance legs of the route. If there is no movement for more than 3 business days, reach out with your order number and we will investigate with the courier.</div>
         </details>
+
+        <form class="track-form" id="track-form" novalidate>
+          <h3>Look up your order</h3>
+          <p class="sub">Enter your order reference and the email you used at checkout to see its status.</p>
+          <div class="track-fields">
+            <input type="text" id="track-ref" class="auth-field" placeholder="Order reference (e.g. BH-1047)" aria-label="Order reference" autocomplete="off">
+            <input type="email" id="track-email" class="auth-field" placeholder="Email used at checkout" aria-label="Email used at checkout" autocomplete="email">
+          </div>
+          <button type="submit" class="btn btn-gold btn-sm" style="margin-top:14px">Track Order</button>
+          <p class="track-result" id="track-result" role="status"></p>
+        </form>
       </section>
 
       <section class="faq-group" id="contact-us">

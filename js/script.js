@@ -809,6 +809,53 @@ if (page === 'contact' && contactForm) {
   });
 }
 
+/* ---------- 07c. Order tracking (faq.html) ----------
+   Wires the backend's /api/orders/lookup endpoint into the FAQ's
+   "Track Your Order" section: reference + checkout email -> order status. */
+const trackForm = $('#track-form');
+if (page === 'faq' && trackForm) {
+  const trackRef = $('#track-ref');
+  const trackEmail = $('#track-email');
+  const trackResult = $('#track-result');
+  trackForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ref = trackRef.value.trim().toUpperCase();
+    const email = trackEmail.value.trim();
+    if (!/^BH-\d+$/.test(ref)) {
+      trackResult.textContent = 'Enter an order reference like BH-1047.';
+      trackResult.className = 'track-result err';
+      trackRef.focus();
+      return;
+    }
+    if (!EMAIL_RE.test(email)) {
+      trackResult.textContent = 'Enter the email you used at checkout.';
+      trackResult.className = 'track-result err';
+      trackEmail.focus();
+      return;
+    }
+    trackResult.textContent = 'Looking up your order\u2026';
+    trackResult.className = 'track-result';
+    const btn = trackForm.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetch(API_BASE + '/api/orders/lookup?ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email));
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'No order matches that reference and email.');
+      }
+      const o = await res.json();
+      trackResult.innerHTML =
+        `<strong>${o.order_ref}</strong> \u00b7 ${o.status} \u00b7 placed ${o.date} \u00b7 ${o.items} item${o.items === 1 ? '' : 's'} \u00b7 ${fmtPrice(o.total)}`;
+      trackResult.className = 'track-result ok';
+    } catch (err) {
+      trackResult.textContent = err.message || 'Could not look up the order right now.';
+      trackResult.className = 'track-result err';
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+}
+
 /* ---------- 08. Mobile drawer ---------- */
 const hamburger = $('#hamburger');
 const drawer = $('#drawer');
